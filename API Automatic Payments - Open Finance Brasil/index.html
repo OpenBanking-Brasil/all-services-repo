@@ -7,11 +7,12 @@
 <body>
   <div id="swagger-ui"></div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-standalone-preset.js"></script> <!-- Adicionado esse script -->
   <script>
     window.onload = function() {
-      const specList = [{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.1.yaml", "name": "2.0.0-rc.1"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.2.yaml", "name": "2.0.0-rc.2"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.3.yaml", "name": "2.0.0-rc.3"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.4.yaml", "name": "2.0.0-rc.4"}];
+      const specList = [{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.1.yaml", "name": "2.0.0-rc.1"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.2.yaml", "name": "2.0.0-rc.2"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.3.yaml", "name": "2.0.0-rc.3"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.0.0-rc.4.yaml", "name": "2.0.0-rc.4"},{"url": "./API.yaml", "name": "API"},{"url": "./Automatic.yaml", "name": "Automatic"},{"url": "./Payments.yaml", "name": "Payments"},{"url": "./-.yaml", "name": "-"},{"url": "./Open.yaml", "name": "Open"},{"url": "./Finance.yaml", "name": "Finance"},{"url": "./2.1.0-rc.1.yaml", "name": "2.1.0-rc.1"}];
       
-      const primarySpec = specList.find(spec => spec.url === "./2.0.0-rc.4.yaml") || specList[0];
+      const primarySpec = specList.find(spec => spec.url === "./2.1.0-rc.1.yaml") || specList[0];
 
       const ui = SwaggerUIBundle({
         urls: specList,
@@ -21,7 +22,7 @@
         supportedSubmitMethods: [],
         presets: [
           SwaggerUIBundle.presets.apis,
-          SwaggerUIStandalonePreset
+          SwaggerUIStandalonePreset  // Agora está definido corretamente
         ],
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl
