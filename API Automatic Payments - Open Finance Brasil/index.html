@@ -9,9 +9,25 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-bundle.js"></script>
   <script>
     window.onload = function() {
+      const specList = [{ url: './API.yaml', name: 'API' },{ url: './Automatic.yaml', name: 'Automatic' },{ url: './Payments.yaml', name: 'Payments' },{ url: './-.yaml', name: '-' },{ url: './Open.yaml', name: 'Open' },{ url: './Finance.yaml', name: 'Finance' },{ url: './2.0.0-rc.1.yaml', name: '2.0.0-rc.1' },{ url: './API.yaml', name: 'API' },{ url: './Automatic.yaml', name: 'Automatic' },{ url: './Payments.yaml', name: 'Payments' },{ url: './-.yaml', name: '-' },{ url: './Open.yaml', name: 'Open' },{ url: './Finance.yaml', name: 'Finance' },{ url: './2.0.0-rc.2.yaml', name: '2.0.0-rc.2' }, primary: true];
+      
+      const primarySpec = specList.find(spec => spec.primary) || specList[0];
+
       const ui = SwaggerUIBundle({
-        url: "2.0.0-rc.1.yaml",
-        dom_id: "#swagger-ui"
+        urls: specList.map(({ url, name }) => ({ url, name })),
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        showExtensions: true,
+        supportedSubmitMethods: [],
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        url: primarySpec.url
       });
     }
   </script>
