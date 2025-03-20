@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: API Automatic Payments - Open Finance Brasil
   description: |
-    TESTE de Release 29 API de Iniciação de Pagamentos automáticos, responsável por viabilizar as operações de iniciação de pagamentos automáticos (Pix automático e Transferências Inteligentes) para o Open Finance Brasil. 
+    TESTE de Release 30 API de Iniciação de Pagamentos automáticos, responsável por viabilizar as operações de iniciação de pagamentos automáticos (Pix automático e Transferências Inteligentes) para o Open Finance Brasil. 
 
     # Orientações
     - `CONTA`, referente às instituições detentoras de conta participantes do Open Finance Brasil;
