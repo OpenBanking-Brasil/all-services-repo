@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Swagger UI</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui.css">
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-bundle.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.3.0/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function() {
+      const specList = [{"url": "./2.0.0.yaml", "name": "2.0.0"}];
+
+      const primarySpec = specList.find(spec => spec.url === "./2.0.0.yaml") || specList[0];
+
+      const ui = SwaggerUIBundle({
+        urls: specList,
+        "urls.primaryName": "2.0.0",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        showExtensions: true,
+        supportedSubmitMethods: [],
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        url: primarySpec.url
+      });
+    }
+  </script>
+</body>
+</html>
