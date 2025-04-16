@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Open Finance Brasil - OpenApi Specification</title>
-  <link rel="stylesheet" type="text/css" href="../.UI/swagger-ui.css" />
-  <link rel="stylesheet" type="text/css" href="../.UI/openbanking-ui.css" />
+  <link rel="stylesheet" type="text/css" href="../_UI/swagger-ui.css" />
+  <link rel="stylesheet" type="text/css" href="../_UI/openbanking-ui.css" />
   <link rel="icon" type="image/png" href="https://openbankingbrasil.org.br/wp-content/themes/openbank/assets/img/favicon.png"/>
   <style> 
     html
@@ -37,6 +37,9 @@
 
   <div id="swagger-ui"></div>
  
+  <script src="../_UI/swagger-ui-bundle.js" charset="UTF-8"> </script>
+  <script src="../_UI/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+
   <script>
     window.onload = function() {
       const specList = [{"url": "./2.0.0-rc.1.yaml", "name": "2.0.0-rc.1"}];
@@ -63,7 +66,7 @@
           var logo = document.getElementsByClassName('link');
           if (logo.length && logo[0].children.length) {
             logo[0].children[0].alt = "Open Finance Brasil";
-            logo[0].children[0].src = "../.UI/LogoNegativo.png";
+            logo[0].children[0].src = "../_UI/LogoNegativo.png";
             logo[0].style.setProperty('display','flex');
           }
 
