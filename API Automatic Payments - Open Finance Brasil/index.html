@@ -12,7 +12,7 @@
     window.onload = function() {
       const specList = [{"url": "./2.0.0.yaml", "name": "2.0.0"},{"url": "./2.1.0.yaml", "name": "2.1.0"}];
 
-      const primarySpec = specList.find(spec => spec.url === "./2.1.0.yaml") || specList[0];
+      const primarySpec = specList.find(spec => spec.url === "./2.0.0.yaml") || specList[0];
 
       const ui = SwaggerUIBundle({
         urls: specList,
