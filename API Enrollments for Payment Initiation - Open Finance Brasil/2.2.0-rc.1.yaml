@@ -256,8 +256,7 @@ paths:
       summary: Obter parâmetros para criação de credenciais FIDO2.
       operationId: enrollmentCreateFidoRegistrationOptions
       description: |
-        Método para obter os parâmetros para criação de uma nova credencial FIDO2. Um novo challenge deve ser criado a cada chamada.
-        Os parâmetros da resposta devem ser compatíveis com a definição [W3C](https://www.w3.org/TR/webauthn-2/#dictionary-makecredentialoptions)
+        Método para obter os parâmetros para criação de uma nova credencial FIDO2. Um novo challenge deve ser criado **para cada enrollment, limitando a um challenge por enrollmentId**. Os parâmetros da resposta devem ser compatíveis com a definição [W3C](https://www.w3.org/TR/webauthn-2/#dictionary-makecredentialoptions)
       parameters:
         - $ref: '#/components/parameters/enrollmentId'
         - $ref: '#/components/parameters/Authorization'
@@ -739,6 +738,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO
                   - PARAMETRO_INVALIDO
                   - ERRO_IDEMPOTENCIA
+                  - MAXIMO_CHALLENGES_ATINGIDO
                 example: STATUS_VINCULO_INVALIDO
                 description: |
                   Códigos de erros previstos:
@@ -747,6 +747,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO: Parâmetro não informado.
                   - PARAMETRO_INVALIDO: Parâmetro inválido.
                   - ERRO_IDEMPOTENCIA: Erro idempotência.
+                  - MAXIMO_CHALLENGES_ATINGIDO: Parâmetros de assinatura FIDO já foram gerados para o enrollmentId especificado.
               title:
                 type: string
                 maxLength: 255
@@ -759,6 +760,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO: Parâmetro não informado.
                   - PARAMETRO_INVALIDO: Parâmetro inválido.
                   - ERRO_IDEMPOTENCIA: Erro idempotência.
+                  - MAXIMO_CHALLENGES_ATINGIDO: Parâmetros de assinatura FIDO já foram gerados para o enrollmentId especificado.
               detail:
                 type: string
                 maxLength: 2048
@@ -771,6 +773,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO: Parâmetro [nome_campo] obrigatório não informado.
                   - PARAMETRO_INVALIDO: Parâmetro [nome_campo] não obedece as regras de formatação esperadas.
                   - ERRO_IDEMPOTENCIA: Conteúdo da mensagem (claim data) diverge do conteúdo associado a esta chave de idempotência (x-idempotency-key).
+                  - MAXIMO_CHALLENGES_ATINGIDO: Parâmetros de assinatura FIDO já foram gerados para o enrollmentId especificado.
         meta:
           $ref: '#/components/schemas/Meta'
     422ResponseErrorRiskSignals:
