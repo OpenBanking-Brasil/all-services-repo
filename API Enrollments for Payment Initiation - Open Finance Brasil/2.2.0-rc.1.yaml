@@ -1619,6 +1619,7 @@ components:
     EnrollmentRejectionReason:
       type: string
       enum:
+      - REJEITADO_TITULARIDADE_DIVERGENTE
       - REJEITADO_TEMPO_EXPIRADO_RISK_SIGNALS
       - REJEITADO_TEMPO_EXPIRADO_ACCOUNT_HOLDER_VALIDATION
       - REJEITADO_TEMPO_EXPIRADO_ENROLLMENT
@@ -1632,6 +1633,8 @@ components:
       - REJEITADO_OUTRO
       description: |
         Indica o motivo do cancelamento do vínculo de conta. Valores possíveis:
+
+        • REJEITADO_TITULARIDADE_DIVERGENTE: A titularidade do usuário logado na detentora é incompatível com a informada na criação do enrollment
 
         • REJEITADO_TEMPO_EXPIRADO_RISK_SIGNALS: Expiração automática devido a timeout no status "AWAITING_RISK_SIGNALS". O envio de sinais de risco não foi concluído.
         
