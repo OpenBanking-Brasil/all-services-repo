@@ -1776,7 +1776,8 @@ components:
                 $ref: '#/components/schemas/FidoPublicKeyCredentialCreationOptions'
             timeout:
               type: integer
-              description: Timeout, em milissegundos, para registro da credencial FIDO2.
+              description: |
+                Representa, em milissegundos, o tempo de validade do challenge para registro da credencial FIDO2. O valor desse campo deverá ser 300000, representando 5 minutos. Esse valor foi definido com base na máquina de estados do vínculo e na documentação do protocolo da webAuthn.
             excludeCredentials:
               type: array
               description: |  
