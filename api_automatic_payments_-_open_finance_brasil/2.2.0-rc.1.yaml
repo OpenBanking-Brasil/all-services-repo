@@ -2773,8 +2773,7 @@ components:
               format: date
               pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$'
               description: |
-                Representa a data prevista para a primeira ocorrência de um pagamento associado a recorrência. 
-                Uma string com data e hora conforme especificação [RFC-3339](https://datatracker.ietf.org/doc/html/rfc3339), sempre com a utilização de timezone UTC(UTC time format).
+                Representa a data prevista para o início do ciclo de cobrança dos pagamentos associados à recorrência. Trata-se de uma string com data conforme especificação RFC-3339, seguindo o horário de Brasília (UTC-3). O pagamento inicial avulso, declarado no objeto firstPayment do consentimento, não está sujeito a essa data.
               example: '2023-05-21'
     Automatic:
       type: object
@@ -2864,8 +2863,7 @@ components:
               format: date
               pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$'
               description: |
-                Representa a data prevista para a primeira ocorrência de um pagamento associado a recorrência. 
-                Uma string com data e hora conforme especificação [RFC-3339](https://datatracker.ietf.org/doc/html/rfc3339), sempre com a utilização de timezone UTC(UTC time format).
+                Representa a data prevista para o início do ciclo de cobrança dos pagamentos associados à recorrência. Trata-se de uma string com data conforme especificação RFC-3339, seguindo o horário de Brasília (UTC-3). O pagamento inicial avulso, declarado no objeto firstPayment do consentimento, não está sujeito a essa data.
               example: '2023-05-21'
     ContractDebtor:
       type: object
