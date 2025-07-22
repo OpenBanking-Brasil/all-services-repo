@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Open Finance Brasil - OpenApi Specification</title>
+  <link rel="stylesheet" type="text/css" href="../UI/swagger-ui.css" />
+  <link rel="stylesheet" type="text/css" href="../UI/openbanking-ui.css" />
+  <link rel="icon" type="image/png" href="https://openbankingbrasil.org.br/wp-content/themes/openbank/assets/img/favicon.png"/>
+  <style> 
+    html
+    {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+
+    *,
+    *:before,
+    *:after
+    {
+      box-sizing: inherit;
+    }
+
+    body
+    {
+      margin:0;
+      background: #fafafa;
+    }
+  </style>
+</head>
+<body>
+  <div id="draft-warning">
+    <p>
+      Essa é uma versão de rascunho e não deve ser utilizada para outras finalidades, você pode encontrar a documentação oficial e atualizada <a target="_blank" href="https://openbankingbrasil.atlassian.net/wiki/spaces/OB/overview">aqui</a>
+    </p>
+  </div>
+
+  <div id="swagger-ui"></div>
+ 
+  <script src="../UI/swagger-ui-bundle.js" charset="UTF-8"> </script>
+  <script src="../UI/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+
+  <script>
+    window.onload = function() {
+      const specList = [{"url": "./4.1.0.yaml", "name": "4.1.0"}];
+
+      const primarySpec = specList.find(spec => spec.url === "./4.1.0.yaml") || specList[0];
+
+      const ui = SwaggerUIBundle({
+        urls: specList,
+        "urls.primaryName": "4.1.0",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        showExtensions: true,
+        supportedSubmitMethods: [],
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout",
+        url: primarySpec.url,
+        onComplete: function() {
+          var logo = document.getElementsByClassName('link');
+          if (logo.length && logo[0].children.length) {
+            logo[0].children[0].alt = "Open Finance Brasil";
+            logo[0].children[0].src = "../UI/LogoNegativo.png";
+            logo[0].style.setProperty('display','flex');
+          }
+
+          const search = new URLSearchParams(window.location.search);
+          if (search.has('draft')) {
+            var draftWarning = document.getElementById('draft-warning');
+            if (draftWarning) {
+              draftWarning.classList.add('show');
+            }
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
