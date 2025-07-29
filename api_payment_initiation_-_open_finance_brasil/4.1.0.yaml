@@ -160,7 +160,8 @@ info:
         &ensp;5.1.8 - QRCode inválido: O QRCode utilizado para a iniciação de pagamento não é válido (QRCODE_INVALIDO);  
         &ensp;5.1.9 - Valor inválido: O valor enviado não é válido para o QR Code informado (VALOR_INVALIDO);  
         &ensp;5.1.10 - Não informado: Demais validações não explicitamente informadas (ex. suspeita de fraude) e consentimentos rejeitados em versões que não existiam o campo rejectionReason na API de Pagamentos (NAO_INFORMADO)  
-        &ensp;5.1.11 - Tempo expirado consumo: O usuário não finalizou o fluxo de pagamento e o consentimento expirou (TEMPO_EXPIRADO_CONSUMO).  
+        &ensp;5.1.11 - Tempo expirado consumo: O usuário não finalizou o fluxo de pagamento e o consentimento expirou (TEMPO_EXPIRADO_CONSUMO).   
+        &ensp;5.1.12 - Autenticação divergente: O usuário autenticado no ambiente da detentora não é o mesmo usuário autenticado no ambiente da iniciadora e que criou o consentimento (AUTENTICACAO_DIVERGENTE).   
       5.2 **[Momentos obrigatórios de validação dos rejectionReasons de acordo com o funil de consentimentos.](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/150863940) Para casos em que um consentimento for rejeitado por mais de um motivo, seguir a ordem de prioridade da tabela.**
       
       ```
@@ -176,14 +177,15 @@ info:
       | Conclusão da autenticação        | FALHA_INFRAESTRUTURA         |          3          |
       |                                  | NAO_INFORMADO                |          4          |
       |----------------------------------|------------------------------|---------------------|
-      |                                  | CONTA_NAO_PERMITE_PAGAMENTO  |          1          |
-      |                                  | CONTAS_ORIGEM_DESTINO_IGUAIS |          2          |
-      |                                  | VALOR_INVALIDO               |          3          |
-      | Autorização do cliente           | QRCODE_INVALIDO              |          4          |
-      |                                  | VALOR_ACIMA_LIMITE           |          5          |
-      |                                  | SALDO_INSUFICIENTE           |          6          |
-      |                                  | FALHA_INFRAESTRUTURA         |          7          |
-      |                                  | NAO_INFORMADO                |          8          |
+      |                                  | AUTENTICACAO_DIVERGENTE      |          1          |
+      |                                  | CONTA_NAO_PERMITE_PAGAMENTO  |          2          |
+      |                                  | CONTAS_ORIGEM_DESTINO_IGUAIS |          3          |
+      |                                  | VALOR_INVALIDO               |          4          |
+      | Autorização do cliente           | QRCODE_INVALIDO              |          5          |
+      |                                  | VALOR_ACIMA_LIMITE           |          6          |
+      |                                  | SALDO_INSUFICIENTE           |          7          |
+      |                                  | FALHA_INFRAESTRUTURA         |          8          |
+      |                                  | NAO_INFORMADO                |          9          |
       |----------------------------------|------------------------------|---------------------|
       |                                  | FALHA_INFRAESTRUTURA         |          1          |
       | Authorisation code emitido       | NAO_INFORMADO                |          2          |
@@ -1365,6 +1367,7 @@ components:
     EnumConsentRejectionReasonType:
       type: string
       enum:
+        - AUTENTICACAO_DIVERGENTE
         - VALOR_INVALIDO
         - NAO_INFORMADO
         - FALHA_INFRAESTRUTURA
@@ -1379,6 +1382,7 @@ components:
       example: SALDO_INSUFICIENTE
       description: |
         Define o código da razão pela qual o consentimento foi rejeitado
+        - AUTENTICACAO_DIVERGENTE
         - VALOR_INVALIDO
         - NAO_INFORMADO
         - FALHA_INFRAESTRUTURA
@@ -1560,6 +1564,7 @@ components:
           maxLength: 2048
           description: |
             Contém informações adicionais ao consentimento rejeitado.
+            - AUTENTICACAO_DIVERGENTE : Usuário autenticado no detentor diverge do usuário autenticado no iniciador​
             - VALOR_INVALIDO: O valor enviado não é válido para o QR Code informado;
             - NAO_INFORMADO: Não informada pela detentora de conta;
             - FALHA_INFRAESTRUTURA: [Descrição de qual falha na infraestrutura inviabilizou o processamento].
