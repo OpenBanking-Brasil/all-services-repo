@@ -140,7 +140,12 @@ info:
         &ensp;4.1.8 Demais validações não explicitamente informadas (ex. suspeita de fraude): (NAO_INFORMADO);  
         &ensp;4.1.9 Validação SPI: Externaliza validações no SPI (PAGAMENTO_RECUSADO_SPI);  
         &ensp;4.1.10 Falha em agendamentos: Uma ou mais incidências de pagamento não foram possíveis de ser agendadas (FALHA_AGENDAMENTO_PAGAMENTOS);  
-        &ensp;4.1.11 Divergências entre dados das chaves pix para agendamento e liquidação: O pagamento agendado não pode ser enviado para liquidação devido a divergências entre dados da chave recebedora utilizada para criação do agendamento com a chave recebedora em momento de liquidação (CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO).  
+        &ensp;4.1.11 Divergências entre dados das chaves pix para agendamento e liquidação: O pagamento agendado não pode ser enviado para liquidação devido a divergências entre dados da chave recebedora utilizada para criação do agendamento com a chave recebedora em momento de liquidação (CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO);  
+        &ensp;4.1.12 Erro de infraestrutura na consulta ao DICT: Ocorreu uma falha de infraestrutura durante a consulta ao DICT (FALHA_INFRAESTRUTURA_DICT);   
+        &ensp;4.1.13 Erro de infraestrutura na consulta ao ICP: Ocorreu uma falha de infraestrutura durante a consulta ao ICP (FALHA_INFRAESTRUTURA_ICP);   
+        &ensp;4.1.14 Erro de infraestrutura na comunicação com o PSP do recebedor: Ocorreu uma falha de infraestrutura durante a comunicação com o PSP do recebedor (FALHA_INFRAESTRUTURA_PSP_RECEBEDOR);   
+        &ensp;4.1.15 Erro de infraestrutura interno na detentora: Ocorreu uma falha de infraestrutura interna na detentora durante o processamento do pagamento (FALHA_INFRAESTRUTURA_DETENTORA);   
+        &ensp;4.1.16 Erro de infraestrutura na consulta ao SPI: Ocorreu uma falha de infraestrutura durante a consulta ao SPI (FALHA_INFRAESTRUTURA_SPI).   
       4.2 **Casos de erro para validações assíncronas no DICT**  
         &ensp;Neste cenário o pagamento é criado com sucesso (status RCVD) e o consentimento é consumido (status CONSUMED), porém, as validações contra o DICT só ocorrerão de forma assíncrona e em caso de negativa será percebido pela iniciadora na consulta do pagamento (GET /Payments).  
         &ensp;Retorno esperado do endpoint GET /Payments: HTTP Code 200 - OK.  
@@ -1453,9 +1458,9 @@ components:
 
         - CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO: Divergências entre dados das chaves Pix no agendamento e na liquidação
 
-        - FALHA_AGENDAMENTO_PAGAMENTOS - Falha ao agendar pagamentos.
+        - FALHA_AGENDAMENTO_PAGAMENTOS - Falha ao agendar pagamentos.  
 
-        O rejectionReason FALHA_INFRAESTRUTURA não será excluído, apenas deixará de ser utilizado, permitindo assim, retrocompatibilidade e integridade entre os participantes.
+        Os rejectionReasons FALHA_INFRAESTRUTURA e CONTAS_ORIGEM_DESTINO_IGUAIS não serão excluídos, apenas deixaram de ser utilizados, permitindo assim, retrocompatibilidade e integridade com as versões anteriores da API.  
     EnumRejectionReasonType:
       type: string
       enum:
@@ -1512,9 +1517,9 @@ components:
 
         - CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO: Divergências entre dados das chaves Pix no agendamento e na liquidação
 
-        - CONTAS_ORIGEM_DESTINO_IGUAIS - Indica uma tentativa de pagamento onde a conta origem e a conta de destino são iguais.
+        - CONTAS_ORIGEM_DESTINO_IGUAIS - Indica uma tentativa de pagamento onde a conta origem e a conta de destino são iguais.  
 
-        O rejectionReason FALHA_INFRAESTRUTURA não será excluído, apenas deixará de ser utilizado, permitindo assim, retrocompatibilidade e integridade entre os participantes.
+        Os rejectionReasons FALHA_INFRAESTRUTURA e CONTAS_ORIGEM_DESTINO_IGUAIS não serão excluídos, apenas deixaram de ser utilizados, permitindo assim, retrocompatibilidade e integridade com as versões anteriores da API.   
     EnumPaymentCancellationReasonType:
       type: string
       enum:
