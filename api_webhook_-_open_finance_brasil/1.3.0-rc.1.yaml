@@ -161,7 +161,6 @@ components:
           description: Informações referentes à chamada realizada.
           required:
             - timestamp
-            - eventType
           properties:
             timestamp:
               $ref: '#/components/schemas/Timestamp'
