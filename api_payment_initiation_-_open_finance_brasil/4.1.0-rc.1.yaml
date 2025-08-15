@@ -876,6 +876,18 @@ components:
         - $ref: '#/components/schemas/ScheduleWeekly'
         - $ref: '#/components/schemas/ScheduleMonthly'
         - $ref: '#/components/schemas/ScheduleCustom'
+      type: object
+      required:
+        - additionalInformation
+      properties:
+        additionalInformation:
+          type: string
+          description: |
+            Texto livre para o Iniciador descrever de forma compreensível pelo usuário aprovador/pagador as características do agendamento solicitado.  
+            O texto pode ser utilizado pelo detentor para exibição do resumo da transação durante aprovação do usuário aprovador/pagador.
+          pattern: '[\w\W\s]*'
+          maxLength: 255
+          example: Todas quintas e domingos por 6 meses
     CreatePixPayment:
       type: object
       required:
@@ -2874,7 +2886,6 @@ components:
             Caso datas repetidas sejam enviadas, o detentor deve rejeitar a criação do consentimento, informando o erro PARAMETRO_INVALIDO.
           required:
             - dates
-            - additionalInformation
           properties:
             dates:
               description: Define os dias em que estão planejadas as ocorrências das liquidações.
@@ -2888,14 +2899,6 @@ components:
                 pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$'
                 maxLength: 10
                 example: '2023-08-23'
-            additionalInformation:
-              type: string
-              description: |
-                Texto livre para Iniciador preencher de forma compreensível pelo usuário aprovador/pagador. 
-                O texto pode ser utilizado pelo detentor para exibição do resumo da transação durante aprovação do usuário aprovador/pagador.
-              pattern: '[\w\W\s]*'
-              maxLength: 255
-              example: Todas quintas e domingos por 6 meses
     XFapiInteractionId:
       type: string
       pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
