@@ -1259,11 +1259,8 @@ components:
               type: string
               description: |
                 ID único do dispositivo gerado pela plataforma.
-
-                Utiliza-se a propriedade do sistema que identifica a combinação de usuário logado, chave de assinatura do aplicativo e dispositivo.
-
+                A geração deve utilizar-se da propriedade do sistema que identifica a combinação de usuário logado, chave de assinatura do aplicativo e dispositivo ou de algoritmos heurísticos capazes de criar um identificador único para o dispositivo.
                 [Android] Informação obtida através do [link](https://developer.android.com/reference/android/provider/Settings.Secure#ANDROID_ID).
-
                 [iOS] Informação obtida através do [link](https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor/).
               example: 00aa11bb22cc33dd
             isRootedDevice:
@@ -1472,11 +1469,8 @@ components:
                   type: string
                   description: |
                     ID único do dispositivo gerado pela plataforma.
-
-                    Utiliza-se a propriedade do sistema que identifica a combinação de usuário logado, chave de assinatura do aplicativo e dispositivo.
-
+                    A geração deve utilizar-se da propriedade do sistema que identifica a combinação de usuário logado, chave de assinatura do aplicativo e dispositivo ou de algoritmos heurísticos capazes de criar um identificador único para o dispositivo.
                     [Android] Informação obtida através do [link](https://developer.android.com/reference/android/provider/Settings.Secure#ANDROID_ID).
-
                     [iOS] Informação obtida através do [link](https://developer.apple.com/documentation/uikit/uidevice/1620059-identifierforvendor/).
                 isRootedDevice:
                   type: boolean
