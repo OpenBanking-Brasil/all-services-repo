@@ -947,6 +947,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO
                   - PARAMETRO_INVALIDO
                   - ERRO_IDEMPOTENCIA
+                  - PERMISSAO_INVALIDA_VINCULO_CONSENTIMENTO 
                 example: STATUS_VINCULO_INVALIDO
                 description: |
                   Códigos de erros previstos:
@@ -956,6 +957,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO: Parâmetro não informado.
                   - PARAMETRO_INVALIDO: Parâmetro inválido.
                   - ERRO_IDEMPOTENCIA: Erro idempotência.
+                  - PERMISSAO_INVALIDA_VINCULO_CONSENTIMENTO: A permissão definida no vínculo não é válida para o tipo de consentimento informado
               title:
                 type: string
                 maxLength: 255
@@ -969,6 +971,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO: Parâmetro não informado.
                   - PARAMETRO_INVALIDO: Parâmetro inválido.
                   - ERRO_IDEMPOTENCIA: Erro idempotência.
+                  - PERMISSAO_INVALIDA_VINCULO_CONSENTIMENTO: A permissão definida no vínculo não é válida para o tipo de consentimento informado
               detail:
                 type: string
                 maxLength: 2048
@@ -982,6 +985,7 @@ components:
                   - PARAMETRO_NAO_INFORMADO: Parâmetro [nome_campo] obrigatório não informado.
                   - PARAMETRO_INVALIDO: Parâmetro [nome_campo] não obedece as regras de formatação esperadas.
                   - ERRO_IDEMPOTENCIA: Conteúdo da mensagem (claim data) diverge do conteúdo associado a esta chave de idempotência (x-idempotency-key).
+                  - PERMISSAO_INVALIDA_VINCULO_CONSENTIMENTO: A permissão definida no vínculo não é válida para o tipo de consentimento informado.
         meta:
           $ref: '#/components/schemas/Meta'
     422ResponseErrorFidoRegistration:
