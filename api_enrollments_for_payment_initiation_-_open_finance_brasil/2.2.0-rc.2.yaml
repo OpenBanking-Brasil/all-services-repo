@@ -2029,11 +2029,12 @@ components:
       type: string
       enum:
         - PAYMENTS_INITIATE
+        - RECURRING_PAYMENTS_INITIATE
       example: PAYMENTS_INITIATE
       description: |
-        Permissões atribuídas ao vínculo de conta:
-        
-        • PAYMENTS_INITIATE: Iniciação de pagamentos sem redirecionamento à detentora.
+        Permissões atribuídas ao vínculo de conta:  
+        • PAYMENTS_INITIATE: Permite a utilização do vinculo para iniciação de pagamentos sem redirecionamento nas famílias de API “payments-consents” e “payments-pix”.  
+        • RECURRING_PAYMENTS_INITIATE: Permite a utilização do vinculo para iniciação de Pix Automático sem redirecionamento nas famílias de API "payments-recurring-consents-automatic" e "payments-pix-recurring-payments-automatic".
     EnumEnrollmentCancelledFrom:
       type: string
       enum:
