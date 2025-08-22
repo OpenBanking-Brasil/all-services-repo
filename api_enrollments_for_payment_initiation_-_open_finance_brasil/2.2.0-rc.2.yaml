@@ -10,6 +10,7 @@ info:
     Durante o cadastro do cliente (DCR/DCM), o software statement assertion possui um atributo nomeado software_origin_uris. 
     Esse atributo armazena as origens permitidas para utilização do protocolo FIDO. 
     Nas chamadas que possuem o argumento clientDataJSON (fido-registration e authorise), o atributo origin deve ser extraído do clientDataJSON e deve ser realizada a verificação se a origin do mesmo está contida no software_origin_uris informado no momento do DCR/DCM. 
+
     Caso a instituição iniciadora altere ou inclua o valor do atributo software_origin_uris, será necessária realização de um novo processo de DCM com as detentoras.
 
     ## Sobre os limites do dispositivo vinculado no Pix Automático
@@ -21,7 +22,7 @@ info:
     Considerando que a falha no pagamento inicial avulso não implica em rejeite síncrono do consentimento de Pix Automático, problemas de limite e/ou saldo não devem impedir a criação ou autorização do consentimento.   
     O valor mínimo definido pelo recebedor no âmbito do Pix Automático também não é alvo de validação durante a autorização do consentimento através desta API.   
     Por fim, os limites do pagamento das recorrências a ser considerado são os definidos no consentimento de Pix Automático.
-
+  
   version: 2.2.0-rc.2
   license:
     name: Apache 2.0
@@ -1247,6 +1248,27 @@ components:
               description: Tipo do documento de identificação oficial do titular pessoa jurídica.
               example: CNPJ
               pattern: '^[A-Z]{4}$'
+    EnrollmentJourney:
+      type: object
+      required:
+        - isLinked
+        - linkId
+      description: | 
+        Informações adicionais sobre o contexto de Jornada Otimizada.  
+        [RESTRIÇÃO] Objeto de envio obrigatório quando o usuário manifestar consentimento para compartilhamento de saldo através da Jornada Otimizada, independente do status do consentimento de dados”
+      properties:
+        isLinked:
+          type: boolean
+          example: false
+          description: |
+            Campo para identificação de consentimento iniciado em Jornada Otimizada.
+        linkId:
+          type: string
+          pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+          maxLength: 256
+          example: urn:bancoex:C1DD331237
+          description: |
+            Identificador do consentimento de dados ao qual este consentimento está vinculado.
     CreateEnrollment:
       type: object
       required:
@@ -1270,6 +1292,8 @@ components:
               $ref: '#/components/schemas/BusinessEntity'
             debtorAccount:
               $ref: '#/components/schemas/DebtorAccount'
+            journey:
+              $ref: '#/components/schemas/EnrollmentJourney'
             enrollmentName:
               description: |
                 [Restrição] Deve ser preenchido sempre que o usuário pagador inserir alguma informação no nome do vínculo/dispositivo tanto no iniciador como no detentor de conta
@@ -2309,6 +2333,8 @@ components:
               $ref: '#/components/schemas/BusinessEntity'
             debtorAccount:
               $ref: '#/components/schemas/DebtorAccount'
+            journey:
+              $ref: '#/components/schemas/EnrollmentJourney'
             enrollmentName:
               description: |
                 [Restrição] Deve ser preenchido sempre que o usuário pagador inserir alguma informação no nome do vínculo/dispositivo tanto no iniciador como no detentor de conta
@@ -2386,6 +2412,8 @@ components:
                     As informações quanto à conta de origem do pagador poderão ser trazidas no vínculo para a detentora, caso a iniciadora tenha coletado essas informações do cliente. Do contrário, será coletada na detentora e trazida para a iniciadora como resposta à criação do vínculo. 
                     
                     [ Restrição ] Deve obrigatoriamente ser preenchido nos status AWAITING_ENROLLMENT, AUTHORISED e REVOKED e não deve ser alterado.
+            journey:
+              $ref: '#/components/schemas/EnrollmentJourney'
             cancellation:
               type: object
               required:
