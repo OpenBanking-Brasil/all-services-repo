@@ -2593,7 +2593,9 @@ components:
               **Regras para Pix Automático:**
 
               - Apenas um item é permitido no array; e; 
-              - O documento informado deve ser de um recebedor pessoa jurídica.
+              - O documento informado deve ser de um recebedor pessoa jurídica.  
+
+              **Informar apenas esse item não deve alterar nenhum outro parâmetro do consentimento**
             properties:
               name:
                 type: string
@@ -2605,9 +2607,9 @@ components:
                   Em caso de pessoa jurídica deve ser informada a razão social ou o nome fantasia da conta do recebedor.
         expirationDateTime:
           description: |
-            Data e hora em que o consentimento deve deixar de ser válido. Uma string com data e hora conforme especificação [RFC-3339](https://datatracker.ietf.org/doc/html/rfc3339), sempre com a utilização de timezone UTC(UTC time format). 
+            Data e hora em que o consentimento deve deixar de ser válido. Uma string com data e hora conforme especificação [RFC-3339](https://datatracker.ietf.org/doc/html/rfc3339), sempre com a utilização de timezone UTC(UTC time format).  
             
-            [Restrição] Caso esse campo não seja enviado, a instituição detentora deve considerar a extensão do prazo para um período indeterminado; ou; 
+            [Restrição] Caso esse campo não seja enviado, a instituição detentora deve considerar a extensão do prazo para um período indeterminado exceto em casos de edição exclusiva do campo “/data/creditors/name; ou;  
             
             Caso enviado, esse campo deve ser, no mínimo, D, sendo D o dia da requisição e o horário deve ser às 23:59:59 (UTC).
           type: string
@@ -2633,7 +2635,7 @@ components:
                     Valor máximo permitido por cobrança, caso preenchido, representa um consentimento para pagamentos de valores variáveis.
 
                     [Restrição] 
-                    Caso esse campo não seja enviado, a instituição detentora deve considerar o valor máximo do pagamento variável como indefinido;
+                    Caso esse campo não seja enviado, a instituição detentora deve considerar o valor máximo do pagamento variável como indefinido, exceto em casos de edição exclusiva do campo “/data/creditors/name”;
                     
                     Caso informado, o valor desse campo não deve ser inferior ao valor definido no campo "/data/recurringConfiguration/automatic/minimumVariableAmount".
         loggedUser:
