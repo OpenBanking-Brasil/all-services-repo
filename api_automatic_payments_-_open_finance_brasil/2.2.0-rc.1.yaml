@@ -144,13 +144,13 @@ info:
         &ensp;6.1.13 - Limite valor excedido por período: Foi atingido o valor limite permitido pelo usuário por um determinado período de tempo no consentimento do pagamento (LIMITE_PERIODO_VALOR_EXCEDIDO);  
         &ensp;6.1.14 - Limite quantidade excedida por período: A quantidade de cobranças atingiu o limite determinado pelo usuário na criação do consentimento (LIMITE_PERIODO_QUANTIDADE_EXCEDIDO);  
         &ensp;6.1.15 - Titularidade Inconsistente: Conta atualmente não associada ao CPF/CNPJ do consentimento de longa duração. Caso a liquidação seja negada pelo PSP Recebedor com erro BE01, cabe a detentora de conta mudar o status do pagamento para RJCT com essa reason (TITULARIDADE_INCONSISTENTE);  
-        &ensp;6.1.16 - Consentimento revogado: O pagamento estava associado a um consentimento que foi revogado (CONSENTIMENTO_REVOGADO);  
-        &ensp;6.1.17 - Limite global excedido: O consentimento encontrasse autorizado e o valor solicitado para cobrança ultrapassa a faixa de limite global parametrizado pelo usuário durante a criação do consentimento (LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO);  
-        &ensp;6.1.18 - Limite de transação excedido: O consentimento encontra-se autorizado e o valor solicitado para cobrança ultrapassa a faixa de limite de valor por transação parametrizado pelo usuário na criação do consentimento (LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO);  
-        &ensp;6.1.19 - Limite de retentativas atingido: Valida se todas as tentativas de liquidação permitidas já foram realizadas (LIMITE_TENTATIVAS_EXCEDIDO);  
-        &ensp;6.1.20 - Fora do prazo permitido: A tentativa de agendamento foi realizada fora do horário ou período permitido e não pode ser aceita pela instituição detentora (FORA_PRAZO_PERMITIDO);  
-        &ensp;6.1.21 - Detalhe tentativa inválida: Valida se os parâmetros informados condizem com a tentativa original de pagamento (DETALHE_TENTATIVA_INVALIDO);  
-        &ensp;6.1.22 - Detalhes do pagamento: Valida se determinado parâmetro informado obedece as regras de negócio (DETALHE_PAGAMENTO_INVALIDO).
+        &ensp;6.1.16 - Limite global excedido: O consentimento encontrasse autorizado e o valor solicitado para cobrança ultrapassa a faixa de limite global parametrizado pelo usuário durante a criação do consentimento (LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO);  
+        &ensp;6.1.17 - Limite de transação excedido: O consentimento encontra-se autorizado e o valor solicitado para cobrança ultrapassa a faixa de limite de valor por transação parametrizado pelo usuário na criação do consentimento (LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO);  
+        &ensp;6.1.18 Limite de retentativas atingido: Valida se todas as tentativas de liquidação permitidas já foram realizadas (LIMITE_TENTATIVA_EXCEDIDO);  
+        &ensp;6.1.19 Fora do prazo permitido: A tentativa de agendamento foi realizada fora do horário ou período permitido e não pode ser aceita pela instituição detentora (FORA_PRAZO_PERMITIDO);  
+        &ensp;6.1.20 Detalhe tentativa inválida: Valida se os parâmetros informados condizem com a tentativa original de pagamento (DETALHE_TENTATIVA_INVALIDO);  
+        &ensp;6.1.21 Detalhes do pagamento: Valida se determinado parâmetro informado obedece as regras de negócio (DETALHE_PAGAMENTO_INVALIDO).
+
 
     ## Validações antifraude da Transferências Inteligentes
 
@@ -320,8 +320,8 @@ paths:
         1 - Informações sobre a revogação:
         - Caso bem sucedido, o consentimento vai para o status “REVOKED”;
         - Apenas consentimentos com status “AUTHORISED” podem ser revogados;
-        - Pagamentos automáticos associados ao consentimento e que estão agendados para ocorrer até as 23:59h do próximo dia (a partir do dia de 
-        solicitação da revogação) deverão ser mantidos. Pagamentos agendados para ocorrer após esse período devem ser cancelados.
+        - Caso a revogação seja realizada pelo recebedor entre 22:00h até 23:59h: Pagamentos automáticos associados ao consentimento e que estão agendados para ocorrer até as 23:59h do próximo dia (a partir do dia de solicitação da revogação) deverão ser mantidos. Pagamentos agendados para ocorrer após esse período devem ser cancelados.
+        - Caso a revogação seja realizada pelo recebedor até as 22:00h ou pelo usuário pagador até as 23:59h: Pagamentos automáticos associados ao consentimento e que estão agendados para ocorrer até as 23:59h do próximo dia (apartir do dia de solicitação da revogação) deverão ser cancelados
         - Demais orientações referentes a revogação podem ser encontrados no header da API, tópico “Validações”, item 3.
 
         2 - Informações sobre a edição: 
@@ -2255,7 +2255,6 @@ components:
         - TITULARIDADE_INCONSISTENTE
         - LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO
         - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO
-        - CONSENTIMENTO_REVOGADO
         - LIMITE_TENTATIVAS_EXCEDIDO
         - FORA_PRAZO_PERMITIDO
         - DETALHE_TENTATIVA_INVALIDO
@@ -2281,7 +2280,6 @@ components:
         - TITULARIDADE_INCONSISTENTE
         - LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO
         - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO: O valor da transação ultrapassar o limite de valor por transação
-        - CONSENTIMENTO_REVOGADO
         - LIMITE_TENTATIVAS_EXCEDIDO
         - FORA_PRAZO_PERMITIDO
         - DETALHE_TENTATIVA_INVALIDO
@@ -2309,7 +2307,6 @@ components:
         - LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO
         - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO
         - LIMITE_TENTATIVAS_EXCEDIDO
-        - CONSENTIMENTO_REVOGADO
         - FORA_PRAZO_PERMITIDO
         - DETALHE_TENTATIVA_INVALIDO
         - DETALHE_PAGAMENTO_INVALIDO
@@ -2335,7 +2332,6 @@ components:
         - LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO
         - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO: O valor da transação ultrapassar o limite de valor por transação.
         - LIMITE_TENTATIVAS_EXCEDIDO: O máximo de tentativas de liquidação permitidas pelo arranjo foi atingido.
-        - CONSENTIMENTO_REVOGADO
         - FORA_PRAZO_PERMITIDO
         - DETALHE_TENTATIVA_INVALIDO
         - DETALHE_PAGAMENTO_INVALIDO
@@ -2527,7 +2523,6 @@ components:
             - TITULARIDADE_INCONSISTENTE: Conta atualmente não associada ao CPF/CNPJ do consentimento de longa duração.
             - LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO: O valor da transação excede o limite global do consentimento.
             - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO: O valor da transação ultrapassar o limite de valor por transação.
-            - CONSENTIMENTO_REVOGADO: O pagamento estava associado a um consentimento que foi revogado.
             - LIMITE_TENTATIVAS_EXCEDIDO: O máximo de tentativas de liquidação permitidas pelo arranjo foi atingido
             - FORA_PRAZO_PERMITIDO: O horário ou período da requisição não permite o agendamento pelo detentor.
             - DETALHE_TENTATIVA_INVALIDO: O parâmetro [nome_do(s)_campo(s)] inseridos para a nova tentativa de pagamento não condizem com o pagamento original que falhou e não são permitidos na nova tentativa de pagamento.
@@ -2567,7 +2562,6 @@ components:
             - LIMITE_VALOR_TOTAL_CONSENTIMENTO_EXCEDIDO: O valor da transação excede o limite global do consentimento.       
             - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO: O valor da transação ultrapassar o limite de valor por transação.
             - LIMITE_TENTATIVAS_EXCEDIDO: O máximo de tentativas de liquidação permitidas pelo arranjo foi atingido.
-            - CONSENTIMENTO_REVOGADO: O pagamento estava associado a um consentimento que foi revogado.
             - FORA_PRAZO_PERMITIDO: O horário ou período da requisição não permite o agendamento pelo detentor.
             - DETALHE_TENTATIVA_INVALIDO: O parâmetro [nome_do(s)_campo(s)] inseridos para a nova tentativa de pagamento não condizem com o pagamento original que falhou e não são permitidos na nova tentativa de pagamento.
             - DETALHE_PAGAMENTO_INVALIDO: Valida se determinado parâmetro informado obedece as regras de negócio.
