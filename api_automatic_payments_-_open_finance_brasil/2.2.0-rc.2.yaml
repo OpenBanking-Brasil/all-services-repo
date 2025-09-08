@@ -954,13 +954,12 @@ components:
                   - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO
                   - LIMITE_TENTATIVAS_EXCEDIDO
                   - FORA_PRAZO_PERMITIDO
-                  - DETALHE_TENTATIVA_INVALIDO
                 example: SALDO_INSUFICIENTE
                 description: |
                   Códigos de erros previstos na criação da iniciação de pagamento:
                   - SALDO_INSUFICIENTE: Esta conta não possui saldo suficiente para realizar o pagamento.
                   - VALOR_ACIMA_LIMITE: Valida se o valor ultrapassa o limite estabelecido [na instituição (conta ou canal)/no arranjo] para permitir a realização de transações pelo cliente.
-                  - VALOR_INVALIDO: O valor enviado não é válido para o QR Code informado.
+                  - VALOR_INVALIDO: O valor enviado não é válido para o consentimento associado ao pagamento.
                   - LIMITE_PERIODO_VALOR_EXCEDIDO: A transação não pode ser realizada pois o valor parametrizado no consentimento foi excedido.
                   - LIMITE_PERIODO_QUANTIDADE_EXCEDIDO: A transação não pode ser realizada pois a quantidade parametrizada no consentimento foi excedida.
                   - CONSENTIMENTO_INVALIDO: Consentimento inválido (em status final).
@@ -977,7 +976,6 @@ components:
                   - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO: O valor da transação ultrapassar o limite de valor por transação.
                   - LIMITE_TENTATIVAS_EXCEDIDO: O limite de tentativas para liquidação do pagamento permitidas pelo arranjo foi excedido.
                   - FORA_PRAZO_PERMITIDO: O horário ou período da requisição não permite o agendamento pelo detentor.
-                  - DETALHE_TENTATIVA_INVALIDO: O parâmetro [nome_do(s)_campo(s)] inseridos para a nova tentativa de pagamento não condizem com o pagamento original que falhou e não são permitidos na nova tentativa de pagamento.
               title:
                 type: string
                 maxLength: 255
@@ -987,7 +985,7 @@ components:
                   Título específico do erro reportado, de acordo com o código enviado:
                   - SALDO_INSUFICIENTE: Esta conta não possui saldo suficiente para realizar o pagamento.
                   - VALOR_ACIMA_LIMITE: Valida se o valor ultrapassa o limite estabelecido [na instituição (conta ou canal)/no arranjo] para permitir a realização de transações pelo cliente.
-                  - VALOR_INVALIDO: O valor enviado não é válido para o QR Code informado.
+                  - VALOR_INVALIDO: O valor enviado não é válido para o consentimento associado ao pagamento.
                   - LIMITE_PERIODO_VALOR_EXCEDIDO: A transação não pode ser realizada pois o valor parametrizado no consentimento foi excedido.
                   - LIMITE_PERIODO_QUANTIDADE_EXCEDIDO: A transação não pode ser realizada pois a quantidade parametrizada no consentimento foi excedida.
                   - CONSENTIMENTO_INVALIDO: Consentimento inválido (em status final).
@@ -1004,7 +1002,6 @@ components:
                   - LIMITE_VALOR_TRANSACAO_CONSENTIMENTO_EXCEDIDO: Limite de transação excedido.
                   - LIMITE_TENTATIVAS_EXCEDIDO: Limite de tentativas excedido.
                   - FORA_PRAZO_PERMITIDO: Tentativa fora do prazo.
-                  - DETALHE_TENTATIVA_INVALIDO: Nova tentativa inválida
               detail:
                 type: string
                 maxLength: 2048
@@ -1014,7 +1011,7 @@ components:
                   Descrição específica do erro de acordo com o código reportado:
                   - SALDO_INSUFICIENTE: Esta conta não possui saldo suficiente para realizar o pagamento.
                   - VALOR_ACIMA_LIMITE: Valida se o valor ultrapassa o limite estabelecido [na instituição (conta ou canal)/no arranjo] para permitir a realização de transações pelo cliente.
-                  - VALOR_INVALIDO: O valor enviado não é válido para o QR Code informado.
+                  - VALOR_INVALIDO: O valor enviado não é válido para o consentimento associado ao pagamento.
                   - LIMITE_PERIODO_VALOR_EXCEDIDO: A transação não pode ser realizada pois o valor parametrizado no consentimento foi excedido.
                   - LIMITE_PERIODO_QUANTIDADE_EXCEDIDO: A transação não pode ser realizada pois a quantidade parametrizada no consentimento foi excedida.
                   - CONSENTIMENTO_INVALIDO: Consentimento inválido (em status final).
@@ -2511,7 +2508,7 @@ components:
 
             - SALDO_INSUFICIENTE: A conta selecionada não possui saldo suficiente para realizar o pagamento;
             - VALOR_ACIMA_LIMITE: Valida se o valor ultrapassa o limite estabelecido [na instituição (conta ou canal)/no arranjo] para permitir a realização de transações pelo cliente;
-            - VALOR_INVALIDO: O valor enviado não é válido; 
+            - VALOR_INVALIDO: O valor enviado não é válido para o consentimento associado ao pagamento; 
             - NAO_INFORMADO: Não reportado/identificado pela instituição detentora de conta;
             - PAGAMENTO_DIVERGENTE_CONSENTIMENTO: Dados do pagamento divergentes dos dados do consentimento;
             - PAGAMENTO_RECUSADO_DETENTORA: [descrição do motivo de recusa];
@@ -2549,7 +2546,7 @@ components:
 
             - SALDO_INSUFICIENTE: A conta selecionada não possui saldo suficiente para realizar o pagamento;
             - VALOR_ACIMA_LIMITE: Valida se o valor ultrapassa o limite estabelecido [na instituição (conta ou canal)/no arranjo] para permitir a realização de transações pelo cliente;
-            - VALOR_INVALIDO: O valor enviado não é válido; 
+            - VALOR_INVALIDO: O valor enviado não é válido para o consentimento associado ao pagamento;
             - NAO_INFORMADO: Não reportado/identificado pela instituição detentora de conta;
             - PAGAMENTO_DIVERGENTE_CONSENTIMENTO: Dados do pagamento divergentes dos dados do consentimento;
             - PAGAMENTO_RECUSADO_DETENTORA: [descrição do motivo de recusa];
