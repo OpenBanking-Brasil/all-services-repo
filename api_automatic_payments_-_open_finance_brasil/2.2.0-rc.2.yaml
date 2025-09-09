@@ -2786,7 +2786,8 @@ components:
               minLength: 1
               maxLength: 35
               example: XE00038166201907261559y6j6
-              description: Identificador do contrato de transação
+              description: |
+                Identificador do contrato do cliente localizado no ambiente do recebedor. Essa informação pode ser fornecida pelo recebedor ou gerada pela ITP durante a criação do consentimento (se previsto em acordo com o recebedor).
             fixedAmount:
               type: string
               pattern: '^((\d{1,16}\.\d{2}))$'
@@ -2871,7 +2872,8 @@ components:
               minLength: 1
               maxLength: 35
               example: XE00038166201907261559y6j6
-              description: Identificador do contrato de transação
+              description: |
+                Identificador do contrato do cliente localizado no ambiente do recebedor. Essa informação pode ser fornecida pelo recebedor ou gerada pela ITP durante a criação do consentimento (se previsto em acordo com o recebedor).
             fixedAmount:
               type: string
               pattern: '^((\d{1,16}\.\d{2}))$'
