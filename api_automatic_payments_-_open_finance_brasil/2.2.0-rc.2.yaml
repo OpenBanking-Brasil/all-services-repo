@@ -682,6 +682,26 @@ components:
       schema:
         $ref: '#/components/schemas/X-V'
   schemas:
+    Journey:
+      type: object
+      required:
+        - isLinked
+        - linkId
+      description: |
+        Informações adicionais sobre o contexto de Jornada Otimizada.  
+
+        [RESTRIÇÃO] Objeto de envio obrigatório quando o usuário manifestar consentimento para compartilhamento de saldo através da Jornada Otimizada em Sweeping, independente do status do consentimento de dados.
+      properties:
+        isLinked:
+          type: boolean
+          description: Campo para identificação de consentimento iniciado em Jornada Otimizada.
+          example: true
+        linkId:
+          type: string
+          pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+          maxLength: 256
+          example: urn:bancoex:C1DD331237
+          description: Identificador do consentimento de dados ao qual este consentimento de pagamentos está vinculado.
     TransactionIdentification:
       type: string
       pattern: ^[a-zA-Z0-9]{1,35}$
@@ -1191,6 +1211,8 @@ components:
                 - $ref: '#/components/schemas/AutomaticRequest'
                 - $ref: '#/components/schemas/SweepingRequest'
                 - $ref: '#/components/schemas/Vrp'
+            journey:
+              $ref: '#/components/schemas/Journey'
     CreateRecurringRetryPixPayment:
       type: object
       required:
@@ -3735,6 +3757,8 @@ components:
                 O campo deve ser atualizado pelo detentor sempre que o consentimento for editado. 
                 Caso a edição seja realizada a partir do iniciador, o detentor deve preencher com a data e hora (UTC) em que recebeu a solicitação de edição. 
                 A edição só é permitida para o produto Pix automático.
+            journey:
+              $ref: '#/components/schemas/Journey'
         links:
           $ref: '#/components/schemas/LinkSingle'
         meta:
@@ -3967,6 +3991,8 @@ components:
               format: date
               pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$'
               example: '2024-12-25'
+            journey:
+              $ref: '#/components/schemas/Journey'
         links:
           $ref: '#/components/schemas/LinkSingle'
         meta:
@@ -4228,6 +4254,8 @@ components:
               format: date
               pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$'
               example: '2024-12-25'
+            journey:
+              $ref: '#/components/schemas/Journey'
         links:
           $ref: '#/components/schemas/LinkSingle'
         meta:
