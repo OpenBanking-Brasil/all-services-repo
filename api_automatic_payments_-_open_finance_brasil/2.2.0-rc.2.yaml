@@ -192,8 +192,9 @@ info:
     Não há limitações relacionadas a quantidade de consentimentos que podem ser criados entre uma mesma ITP, conta de débito e titularidade. Fica a cargo da instituição iniciadora solicitar, sempre que julgar necessário para atendimento do usuário, a criação de um novo consentimento.
     
     ## Sobre o cancelamento de novas tentativas de pagamento para o Pix Automático
-    Não é permitido ao usuário pagador o cancelamento de uma nova tentativa de pagamento, realizada pelo recebedor, quando autorizado no consentimento (campo “/data/recurringConfiguration/automatic/isRetryAccepted” como “True”) pelo usuário pagador ou quando o Iniciador precisar enviar um novo endToEndId. 
-    Aplica-se tanto para a tentativa intradia quanto para a tentativa em dias subsequentes. É permitido ao recebedor o cancelamento das novas tentativas em dias subsequentes. Aplicam-se as regras de cancelamento da tentativa original, conforme previsto na descrição do endpoint PATCH /pix/recurringPayments Pagamentos que são novas tentativas, intradia ou em dias subsequentes, podem ser identificados pela presença do campo “/data/originalRecurringPaymentId” no recurso. 
+    Não é permitido ao usuário pagador o cancelamento de uma nova tentativa de pagamento, realizada pelo recebedor, quando autorizado no consentimento (campo “/data/recurringConfiguration/automatic/isRetryAccepted” como “True”) pelo usuário pagador ou quando o Iniciador precisar enviar um novo endToEndId.  
+    Aplica-se tanto para a tentativa intradia quanto para a tentativa em dias subsequentes. É permitido ao recebedor o cancelamento das novas tentativas em dias subsequentes. Aplicam-se as regras de cancelamento da tentativa original, conforme previsto na descrição do endpoint PATCH /pix/recurringPayments.  
+    Pagamentos que são novas tentativas, intradia ou em dias subsequentes, podem ser identificados pela presença do campo “/data/originalRecurringPaymentId” no recurso. 
   
   version: 2.2.0-rc.2
   license:
@@ -1384,30 +1385,28 @@ components:
           $ref: '#/components/schemas/PaymentReference'
     PaymentReference:
       type: string
-      example: '23-07-2025/P1W'
-      minLength: 4
-      maxLength: 14
-      pattern: '^zero$|^\d{2}-\d{2}-\d{4}\/P(1W|1M|3M|6M|1Y)$'
+      example: 'R/2025-09-23/P1M'
       description: |
-        [Restrição]Campo de preenchimento obrigatório caso seja um pagamento de Pix automático e deve ser enviado para critérios de coleta de métricas do ecossistema. Caso essa regra não seja respeitada, a instituição detentora da conta deve retornar um erro HTTP 422 com o código DETALHE_PAGAMENTO_INVALIDO.  
-        - O preenchimento deve seguir a seguinte lógica:  
-          - Primeiro Pagamento: Caso se trate do pagamento inicial avulso, especificado no campo “/data/firstPayment”, o valor deste campo deve ser preenchido com a string fixa "zero".  
-          - Pagamentos Recorrentes (Subsequentes): Para todos os pagamentos recorrentes realizados após o pagamento inicial, o campo paymentReference deve ser preenchido com uma string de Intervalo ISO 8601 no formato ```<start>/<duration>```, que representa o ciclo exato ao qual o pagamento se refere.  
-            - O componente ```<start>``` deve indicar a data de início do ciclo específico ao qual o pagamento enviado se refere.  
-            - O componente ```<duration>``` deve corresponder ao código da periodicidade do consentimento (P1W para semanal, P1M para mensal, P3M para trimestral, P6M para semestral e P1Y para anual)  
+        [Restrição] Campo de preenchimento obrigatório caso seja um pagamento de Pix automático e deve ser enviado para critérios de coleta de métricas do ecossistema. Caso essa regra não seja respeitada, a instituição detentora da conta deve retornar um erro HTTP 422 com o código DETALHE_PAGAMENTO_INVALIDO.  
+        O preenchimento deve seguir a seguinte lógica:  
+        - Primeiro Pagamento: Se for o pagamento inicial especificado no campo /data/firstPayment, preencha o campo com a string fixa "zero".  
+        - Pagamentos Recorrentes (Subsequentes): Para todos os pagamentos recorrentes após o inicial, o campo paymentReference deve ser preenchido com uma string ISO 8601 no formato ```R/<start>/<duration>```, representando o ciclo exato que está sendo pago.  
+          - ```R```, seguindo o padrão ISO8601 para representar a recorrência única do ciclo que se iniciou no dia informado no componente ```<start>```.  
+          - O componente ```<start>``` deve ser a data de início do ciclo específico, no formato ```YYYY-MM-DD```, ao qual o pagamento sendo enviado se refere.    
+          - O componente ```<duration>``` representa o intervalo de ciclos definido para o consentimento autorizado (P1W para semanal, P1M para mensal, P3M para trimestral, P6M para semestral e P1Y para anual).   
             - Exemplos:
               - 1: Data de início do ciclo definido no consentimento: 23/07/25
                 - Periodicidade definida no consentimento: Semanal
                 - Preenchimento do paymentReference:
-                - Primeiro ciclo: 23-07-2025/P1W
-                - Segundo ciclo: 30-07-2025/P1W
-                - Terceiro ciclo: 06-07-2025/P1W
+                - Primeiro ciclo: R/2025-07-23/P1W
+                - Segundo ciclo:  R/2025-07-30/P1W
+                - Terceiro ciclo: R/2025-08-06/P1W
               - 2: Data de início do ciclo definido no consentimento: 23/07/25
                 - Periodicidade definida no consentimento: Mensal
                 - Preenchimento do paymentReference:
-                - Primeiro ciclo: 23-07-2025/P1M
-                - Segundo ciclo: 23-08-2025/P1M
-                - Terceiro ciclo: 23-09-2025/P1M
+                - Primeiro ciclo: R/2025-07-23/P1M
+                - Segundo ciclo: R/2025-08-23/P1M
+                - Terceiro ciclo: R/2025-09-23/P1M
     RiskSignalsPayments:
       type: object
       description: |
