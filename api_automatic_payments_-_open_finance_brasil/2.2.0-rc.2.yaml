@@ -83,6 +83,7 @@ info:
         &ensp;2.1.4 Mesma conta origem/destino: A conta indicada pelo usuário para recebimento é a mesma selecionada para o pagamento (CONTAS_ORIGEM_DESTINO_IGUAIS);  
         &ensp;2.1.5 Tipo de conta inválida: A conta indicada não permite operações de pagamento (CONTA_NAO_PERMITE_PAGAMENTO);  
         &ensp;2.1.6 Autenticação divergente: O usuário autenticado no ambiente da detentora não é o mesmo usuário autenticado no ambiente da iniciadora e que criou o consentimento. (AUTENTICACAO _DIVERGENTE);  
+        &ensp;2.1.7 O consentimento está configurado para um produto ainda não suportado pela Jornada sem Redirecionamento (FLUXO_NAO_SUPORTADO_PRODUTO).
 
     3. **Demais validações executadas durante o processamento assíncrono do consentimento pela detentora, poderão ser consultados pela iniciadora através dos endpoints GET /recurring-consents/{recurringConsentId} previstos com retorno HTTP Code 200 - OK com status REVOKED e revocationReason conforme abaixo (detalhamento adicional na documentação técnica da API).**  
       3.1 **Demais validações durante o processamento assíncrono:**  
@@ -2458,6 +2459,7 @@ components:
             - CONTAS_ORIGEM_DESTINO_IGUAIS
             - CONTA_NAO_PERMITE_PAGAMENTO
             - AUTENTICACAO_DIVERGENTE
+            - FLUXO_NAO_SUPORTADO_PRODUTO
           example: AUTENTICACAO_DIVERGENTE
           description: |
             Código indicador do motivo de rejeição.
@@ -2468,6 +2470,7 @@ components:
             - CONTAS_ORIGEM_DESTINO_IGUAIS
             - CONTA_NAO_PERMITE_PAGAMENTO
             - AUTENTICACAO_DIVERGENTE
+            - FLUXO_NAO_SUPORTADO_PRODUTO
         detail:
           type: string
           pattern: '[\w\W\s]*'
@@ -2481,6 +2484,7 @@ components:
             - CONTAS_ORIGEM_DESTINO_IGUAIS: A conta selecionada é igual à conta destino e não permite realizar esse pagamento;
             - CONTA_NAO_PERMITE_PAGAMENTO: A conta selecionada é do tipo [salario/investimento/liquidação/outros] e não permite realizar esse pagamento;
             - AUTENTICACAO_DIVERGENTE : Usuário autenticado no detentor diverge do usuário autenticado no iniciador;
+            - FLUXO_NAO_SUPORTADO_PRODUTO: O consentimento está configurado para um produto ainda não suportado pela Jornada sem Redirecionamento.
           example: O usuário rejeitou a autorização do consentimento 
     RejectionReasonGet:
       type: object
