@@ -540,9 +540,10 @@ paths:
       summary: Cancelar todos os pagamentos referentes ao mesmo Consentimento.
       operationId: paymentsPatchPixPaymentsConsentId
       description: |
-        Esse endpoint deve ser usado para cancelar, a pedido do cliente pagador, as transações que estejam em uma das seguintes situações: Agendada com sucesso (SCHD) ou retida para análise (PDNG).
-        O cancelamento de pagamentos agendados (SCHD) podem ser enviados até 23:59 (Horário de Brasília) do dia anterior à data de efetivação do pagamento. Todos os pagamentos vinculados a esse consentimento e previstos para ocorrer a partir do dia seguinte serão cancelados.
-        Os pagamentos já liquidados não são passíveis de cancelamento.
+        Esse endpoint deve ser usado apenas para cancelar, a pedido do cliente pagador, as transações que estejam em Agendada com sucesso (SCHD). Pagamentos que estejam Pendentes (PDNG) ou em outro estado diferente de 
+        SCHD não são passíveis de cancelamento neste endpoint. O cancelamento de pagamentos agendados (SCHD) pode ser enviado até 22:00 (Horário de Brasília) do dia anterior à data de efetivação do pagamento.
+        Todos os pagamentos vinculados a esse consentimento e previstos para ocorrer a partir do dia seguinte serão cancelados, em até 60 minutos.  
+        A ITP deverá, posterior ao pedido de cancelamento, consultar os pagamentos e verificar seu estado.
         - Se não restar nenhum pagamento (ocorrência) que poderá ser cancelado, a requisição PATCH retorna HTTP Status 422 com o code PAGAMENTO_NAO_PERMITE_CANCELAMENTO.
         - Caso receba um 422, a iniciadora deve fazer uma requisição GET no pagamento para verificar a situação atual dele, bem como detalhes associados.
         - Caso o consentimento enviado pelo iniciador no path de requisição não exista na detentora de conta, a detentora deverá retornar código 404.
@@ -562,8 +563,8 @@ paths:
         description: Payload para cancelamento do pagamento.
         required: true 
       responses:
-        '200':
-          $ref: '#/components/responses/200PatchPixConsents'
+        '202':
+          $ref: '#/components/responses/202PatchPixConsents'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -3362,8 +3363,8 @@ components:
         application/jwt:
           schema:
             $ref: '#/components/schemas/ResponsePatchPixPayment'  
-    200PatchPixConsents:
-      description: Iniciação de pagamento Pix cancelada com sucesso.
+    202PatchPixConsents:
+      description: Solicitação de cancelamento dos pagamentos realizada.
       headers:
         x-fapi-interaction-id:
           description: |
@@ -3372,7 +3373,3 @@ components:
             $ref: '#/components/schemas/XFapiInteractionId'
         x-v:
           $ref: '#/components/headers/X-V'
-      content:
-        application/jwt:
-          schema:
-            $ref: '#/components/schemas/ResponsePatchPixConsent'  
