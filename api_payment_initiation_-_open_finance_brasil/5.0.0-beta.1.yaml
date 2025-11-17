@@ -595,7 +595,18 @@ paths:
             - payments
 
 components:
+  headers:
+    X-V: 
+      description: |
+          Cabeçalho que indica a versão implementada da API pela instituição financeira para atender à solicitação. Deve ser preenchido de forma completa, por exemplo: x-v : 1.0.2.
+      required: true
+      schema:
+        $ref: '#/components/schemas/X-V'
   schemas:
+    X-V:
+      type: string
+      pattern: '^\d+\.\d+\.\d+$'
+      example: 1.0.0
     422ResponseErrorCreateConsent:
       type: object
       required:
@@ -3275,6 +3286,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
@@ -3287,6 +3300,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
@@ -3299,6 +3314,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
@@ -3311,6 +3328,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
@@ -3323,6 +3342,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
@@ -3335,6 +3356,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
@@ -3347,6 +3370,8 @@ components:
             Um UUID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como um ID de correlação entre request e response. Campo de geração e envio obrigatório pela iniciadora (client) e o seu valor deve ser “espelhado” pela detentora (server) no cabeçalho de resposta. Caso não seja enviado pela iniciadora, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400. Caso recebido um valor inválido, a detentora deve gerar um x-fapi-interaction-id e retorná-lo na resposta com o HTTP status code 400 ou 422 (com o código PARAMETRO_INVALIDO). A iniciadora deve acatar o valor gerado pelo detentor e recebido na resposta.
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
+        x-v:
+          $ref: '#/components/headers/X-V'
       content:
         application/jwt:
           schema:
