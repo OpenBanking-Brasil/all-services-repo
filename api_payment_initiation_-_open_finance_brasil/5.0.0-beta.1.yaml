@@ -868,9 +868,9 @@ components:
                   pattern: '^\d{7}$'
                   example: '5300108'
                   description: |
-                    O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-                    1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
+                    O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
+                    Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
+                    No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.  
                 details:
                   $ref: '#/components/schemas/Details'
             debtorAccount:
@@ -981,16 +981,6 @@ components:
                   – APDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9])
 
                   A detentora de conta deve validar se a condicionalidade e o formato do campo foram atendidas pela iniciadora de pagamento.  
-              ibgeTownCode:
-                type: string
-                minLength: 7
-                maxLength: 7
-                pattern: '^\d{7}$'
-                example: '5300108'
-                description: |
-                  O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-                  1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
               authorisationFlow:
                 type: string
                 enum:
@@ -1758,9 +1748,9 @@ components:
           pattern: '^\d{7}$'
           example: '5300108'
           description: |
-            O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-            1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
+            O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
+            Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
+            No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.  
         details:
           $ref: '#/components/schemas/Details'
     PaymentPix:
@@ -2229,9 +2219,9 @@ components:
                   pattern: '^\d{7}$'
                   example: '5300108'
                   description: |
-                    O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-                    1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
+                    O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
+                    Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
+                    No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.  
                 details:
                   $ref: '#/components/schemas/Details'
             debtorAccount:
@@ -2378,18 +2368,15 @@ components:
           pattern: '[\w\W\s]*'
           example: '12345678901'
           description: |
-            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, CPF/CNPJ ou chave aleatória. No caso de telefone celular, deve ser informado no padrão E.1641. Para e-mail, deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx), com no máximo 77 caracteres. Para CPF, deverá ser informado com 11 números, sem pontos ou traços. Para o caso de CNPJ, deverá ser informado com 14 caracteres, sem pontos ou traços. No caso de chave aleatória, deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC 4122. Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, APDN, QRDN ou QRES e também validar o campo creditorAccount. Esta validação é opcional caso o localInstrument for igual a INIC.   
-            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument  for igual INIC, DICT, APDN, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix  
-        ibgeTownCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: '^\d{7}$'
-          example: '5300108'
-          description: |
-            O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-            1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
+            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.
+            No caso de telefone celular deve ser informado no padrão E.1641.
+            Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres.
+            No caso de CPF deverá ser informado com 11 números, sem pontos ou traços.
+            Para o caso de CNPJ deverá ser informado com 14 números, sem pontos ou traços.
+            No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
+            Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
+            Esta validação é opcional caso o localInstrument for igual a INIC.
+            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
         status:
           $ref: '#/components/schemas/EnumPaymentStatusType'
         rejectionReason:
@@ -2527,18 +2514,15 @@ components:
                 pattern: '[\w\W\s]*'
                 example: '12345678901'
                 description: |
-                  Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, CPF/CNPJ ou chave aleatória. No caso de telefone celular, deve ser informado no padrão E.1641. Para e-mail, deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx), com no máximo 77 caracteres. Para CPF, deverá ser informado com 11 números, sem pontos ou traços. Para o caso de CNPJ, deverá ser informado com 14 caracteres, sem pontos ou traços. No caso de chave aleatória, deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC 4122. Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, APDN, QRDN ou QRES e também validar o campo creditorAccount. Esta validação é opcional caso o localInstrument for igual a INIC.   
-                  [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument  for igual INIC, DICT, APDN, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix  
-              ibgeTownCode:
-                type: string
-                minLength: 7
-                maxLength: 7
-                pattern: '^\d{7}$'
-                example: '5300108'
-                description: |
-                  O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-                  1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
+                  Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.
+                  No caso de telefone celular deve ser informado no padrão E.1641.
+                  Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres.
+                  No caso de CPF deverá ser informado com 11 números, sem pontos ou traços.
+                  Para o caso de CNPJ deverá ser informado com 14 números, sem pontos ou traços.
+                  No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
+                  Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
+                  Esta validação é opcional caso o localInstrument for igual a INIC.
+                  [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
               status:
                 $ref: '#/components/schemas/EnumPaymentStatusType'
               rejectionReason:
@@ -2692,18 +2676,15 @@ components:
           pattern: '[\w\W\s]*'
           example: '12345678901'
           description: |
-            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, CPF/CNPJ ou chave aleatória. No caso de telefone celular, deve ser informado no padrão E.1641. Para e-mail, deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx), com no máximo 77 caracteres. Para CPF, deverá ser informado com 11 números, sem pontos ou traços. Para o caso de CNPJ, deverá ser informado com 14 caracteres, sem pontos ou traços. No caso de chave aleatória, deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC 4122. Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, APDN, QRDN ou QRES e também validar o campo creditorAccount. Esta validação é opcional caso o localInstrument for igual a INIC.   
-            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument  for igual INIC, DICT, APDN, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix  
-        ibgeTownCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: '^\d{7}$'
-          example: '5300108'
-          description: |
-            O campo ibgetowncode no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no item 1.6.6 do manual do PIX, conforme segue:
-
-            1. Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;
+            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.
+            No caso de telefone celular deve ser informado no padrão E.1641.
+            Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres.
+            No caso de CPF deverá ser informado com 11 números, sem pontos ou traços.
+            Para o caso de CNPJ deverá ser informado com 14 números, sem pontos ou traços.
+            No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
+            Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
+            Esta validação é opcional caso o localInstrument for igual a INIC.
+            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
         status:
           $ref: '#/components/schemas/EnumPaymentStatusType'
         rejectionReason:
