@@ -603,6 +603,12 @@ components:
       schema:
         $ref: '#/components/schemas/X-V'
   schemas:
+    PayloadJWS:
+      description: |
+        Representa o payloadJWS obtido pela ITP na leitura do QR dinâmico. Devem ser enviados todos os fragmentos capturados do JWT que representa o QR gerado pelo PSP do Recebedor, permitindo ao detentor de contas validar os dados das cobranças repassadas pelo ITP.   
+        [Restrição] Campo de envio obrigatório quando o valor presente em ```/data/payment/details/localInstrument``` for igual a APDN ou QRDN.
+      type: string
+      maxLength: 512
     TxId:
       type: string
       pattern: '^[a-zA-Z0-9]{1,35}$'
@@ -973,14 +979,9 @@ components:
                   BR.COM.OUTRO011001234567895204000053039865406123.455802BR5915NOMEDORECEBEDOR6008BRASILIA61087007490062
                   530515RP12345678-201950300017BR.GOV.BCB.BRCODE01051.0.080450014BR.GOV.BCB.PIX0123PADRAO.URL.PIX/0123AB
                   CD81390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304EB76
-                description: |
-                  Sequência de caracteres que corresponde ao QR Code disponibilizado para o pagador. É a sequência de
-                  caracteres que seria lida pelo leitor de QR Code, e deve propiciar o retorno dos dados do pagador após
-                  consulta na DICT. Essa funcionalidade é disponível tanto para QR Code Estático quanto QR Code Dinâmico
-                  (Câmera ou NFC). No arranjo do Pix, trata-se da mesma sequência gerada e/ou lida pela funcionalidade Pix
-                  Copia e Cola. Este campo deverá ser no formato UTF-8.
-                  [Restrição] Preenchimento obrigatório quando o valor do campo “/data/localInstrument” for igual a QRES,
-                  QRDN, APDN ou APES, observado o tamanho máximo de 512 bytes.
+                description: |                  
+                  Representa a sequência de caracteres correspondente ao QRCode disponibilizado para o pagador, podendo ser obtido pelo leitor do dispositivo do pagador ou por copia e cola. Deve estar no formato UTF-8 e propiciar o retorno dos dados do pagador após a consulta no DICT. Para casos onde “/data/payment/details/localInstrument” for igual a QRDN ou APDN, os dados da cobrança serão repassados pelo ITP no campo “/data/payment/details/payloadJWS”, permitindo ao detentor validar os dados da cobrança sem a necessidade de consultar o payloadJWS do QRCode em questão através da URL. Não é vedada ao detentor realizar a consulta, porém, em casos de mudança do valor do campo "txId", a detentora deverá confiar no payloadJWS repassado pela ITP.  
+                  [Restrição] Campo de preencimento obrigatório quando o valor de /data/payment/details/localInstrument for igual a QRDN, APDN, QRES ou APES, observado o tamanho máximo de 512 bytes.
               proxy:
                 $ref: '#/components/schemas/Proxy'
               cnpjInitiator:
@@ -1154,6 +1155,8 @@ components:
         - localInstrument
         - creditorAccount
       properties:
+        payloadJWS:
+          $ref: '#/components/schemas/PayloadJWS'
         localInstrument:
           $ref: '#/components/schemas/EnumLocalInstrument'
         qrCode:
@@ -1165,14 +1168,9 @@ components:
             BR.COM.OUTRO011001234567895204000053039865406123.455802BR5915NOMEDORECEBEDOR6008BRASILIA61087007490062
             530515RP12345678-201950300017BR.GOV.BCB.BRCODE01051.0.080450014BR.GOV.BCB.PIX0123PADRAO.URL.PIX/0123AB
             CD81390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304EB76
-          description: |
-            Sequência de caracteres que corresponde ao QR Code disponibilizado para o pagador. É a sequência de
-            caracteres que seria lida pelo leitor de QR Code, e deve propiciar o retorno dos dados do pagador após
-            consulta na DICT. Essa funcionalidade é disponível tanto para QR Code Estático quanto QR Code Dinâmico
-            (Câmera ou NFC). No arranjo do Pix, trata-se da mesma sequência gerada e/ou lida pela funcionalidade Pix
-            Copia e Cola. Este campo deverá ser no formato UTF-8.
-            [Restrição] Preenchimento obrigatório quando o valor do campo “/data/localInstrument” for igual a QRES,
-            QRDN, APDN ou APES, observado o tamanho máximo de 512 bytes.
+          description: |            
+            Representa a sequência de caracteres correspondente ao QRCode disponibilizado para o pagador, podendo ser obtido pelo leitor do dispositivo do pagador ou por copia e cola. Deve estar no formato UTF-8 e propiciar o retorno dos dados do pagador após a consulta no DICT. Para casos onde “/data/payment/details/localInstrument” for igual a QRDN ou APDN, os dados da cobrança serão repassados pelo ITP no campo “/data/payment/details/payloadJWS”, permitindo ao detentor validar os dados da cobrança sem a necessidade de consultar o payloadJWS do QRCode em questão através da URL. Não é vedada ao detentor realizar a consulta, porém, em casos de mudança do valor do campo "txId", a detentora deverá confiar no payloadJWS repassado pela ITP.  
+            [Restrição] Campo de preencimento obrigatório quando o valor de /data/payment/details/localInstrument for igual a QRDN, APDN, QRES ou APES, observado o tamanho máximo de 512 bytes.
         proxy:
           $ref: '#/components/schemas/Proxy'
         creditorAccount:
