@@ -58,6 +58,12 @@ info:
     enviar o Pix para Liquidação. Todos os pagamentos associados a esse consentimento devem ser rejeitados com o
     motivo CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO, e o usuário pagador deve ser notificado
 
+    ## Pix Saque e Troco
+    - A partir da versão 5.0.0 da API Pagamentos passa a ser possível a realização de Saques e Trocos através das funcionalidades disponíveis para tal no arranjo Pix. Para a realização das operações, as ITPs devem passar a reportar o payloadJWS completo que foi gerado pelo PSP do Recebedor, o qual contém todos os dados necessários para a validação das informações da operação em questão.  
+    - Ao receber um pedido de criação de consentimento que esteja marcado como ```WITHDRAW``` ou ```CHANGE``` no campo ```/data/payment/purpose```, o PSP do Pagador (Detentor) deverá consultar os dados do agente e do facilitador do serviço dentro do payloadJWS enviado pelo ITP, assim como os outros dados pertinentes a operação solicitada.  
+    - A identificação também deverá ser realizada pelo PSP do Pagador ao enviar a mensagem ```PACS.008``` ao SPI, com a marcação correta da finalidade da transação sendo realizada, bem como outras informações necessárias para a correta liquidação da operação de Saque ou Troco.  
+    - Outras regras que devem ser observadas durante a validação e liquidação do QRCode de Pix Saque ou Pix Troco podem ser encontrados no Manual de Padrões para Iniciação do Pix, disponível no site do Banco Central.
+
     ## Validações
     **Validações** (*após o processo de DCR e obtenção de token client credential*– não escopo dessa documentação)  
     Durante a jornada de iniciação de pagamento, diferentes validações são necessárias pela instituição detentora 
@@ -711,6 +717,36 @@ components:
                   • NAO_INFORMADO: Não reportado/identificado pela instituição detentora de conta.  
         meta:
           $ref: '#/components/schemas/Meta'
+    Amount:
+      type: string
+      minLength: 4
+      maxLength: 19
+      pattern: '^((\d{1,16}\.\d{2}))$'
+      example: '100000.12'
+      description: |
+       Valor da transação com 2 casas decimais. Para QR Code estático com valor pré-determinado no QR Code e para QR Code dinâmico de cobrança ou QRCode Dinâmico de Pix Saque com indicação de que o valor não pode ser alterado ("modalidadeAlteracao" igual a 0): O campo amount deve ser preenchido com o valor estabelecido no QR Code.  
+       Caso seja preenchido com valor divergente do QR Code que não permita alteração, deve ser retornado um erro HTTP Status 422 VALOR_INVALIDO.
+    Porpuse:
+      description: |
+        Representa qual a finalidade da transação recebida.  
+        - IMMEDIATE: Deve ser utilizado quando o pagamento gerado pelo consentimento for único e imediato e não for um Pix    Saque ou Pix Troco;  
+        - SINGLE_SCHEDULED: Deve ser utilizado quando o pagamento gerado pelo consentimento for único e agendado;  
+        - RECURRENT_SCHEDULED: Deve ser utilizado quando o pagamento gerado pelo consentimento não é único e é agendado;  
+        - WITHDRAW: Deve ser utilizado quando o pagamento for único, imediato e representar uma operação de saque;  
+        - CHANGE: Deve ser utilizado quando o pagamento for único, imediato e representar uma operação de troco.
+        
+        [Restrições]   
+        - Campo de envio obrigatório quando o valor do campo /data/payment/type for igual a PIX, e;  
+        - Se preenchido o objetivo /data/payment/scheduled/single, apenas o valor SINGLE_SCHEDULED é permitidos, ou;  
+        - Se preenchido um dos objetos /data/payment/scheduled/daily, /data/payment/scheduled/weekly, /data/payment/scheduled/monthly ou /data/payment/scheduled/custom, apenas o valor RECURRENT_SCHEDULED é permitido.
+      type: string
+      enum:
+        - IMMEDIATE
+        - SINGLE_SCHEDULED
+        - RECURRENT_SCHEDULED
+        - WITHDRAW
+        - CHANGE
+      
     422ResponseErrorCreatePixPayments:
       type: object
       required:
@@ -865,6 +901,8 @@ components:
               properties:
                 type:
                   $ref: '#/components/schemas/EnumPaymentType'
+                porpuse:
+                  $ref: '#/components/schemas/Porpuse'
                 schedule:
                   $ref: '#/components/schemas/Schedule'
                 date:
@@ -888,16 +926,7 @@ components:
                     Código da moeda nacional segundo modelo ISO-4217, ou seja, 'BRL'.
                     Todos os valores monetários informados estão representados com a moeda vigente do Brasil.
                 amount:
-                  type: string
-                  minLength: 4
-                  maxLength: 19
-                  pattern: '^((\d{1,16}\.\d{2}))$'
-                  example: '100000.12'
-                  description: |
-                    Valor da transação com 2 casas decimais. O valor deve ser o mesmo enviado no consentimento. 
-
-                    Para QR Code estático com valor pré-determinado no QR Code ou para QR Code dinâmico com indicação de que o valor não pode ser alterado: O campo amount deve ser preenchido com o valor estabelecido no QR Code. 
-                    Caso seja preenchido com valor divergente do QR Code, deve ser retornado um erro HTTP Status 422.
+                  $ref: '#/components/schemas/Amount'
                 ibgeTownCode:
                   type: string
                   minLength: 7
@@ -1720,6 +1749,8 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/EnumPaymentType'
+        porpuse:
+          $ref: '#/components/schemas/Porpuse'
         schedule:
           $ref: '#/components/schemas/Schedule'
         date:
@@ -1743,13 +1774,7 @@ components:
             Código da moeda nacional segundo modelo ISO-4217, ou seja, 'BRL'.
             Todos os valores monetários informados estão representados com a moeda vigente do Brasil.
         amount:
-          type: string
-          minLength: 4
-          maxLength: 19
-          pattern: '^((\d{1,16}\.\d{2}))$'
-          example: '100000.12'
-          description: |
-            Valor da transação com 2 casas decimais.
+          $ref: '#/components/schemas/Amount'
         ibgeTownCode:
           type: string
           minLength: 7
@@ -1770,16 +1795,7 @@ components:
         - currency
       properties:
         amount:
-          type: string
-          minLength: 4
-          maxLength: 19
-          pattern: '^((\d{1,16}\.\d{2}))$'
-          example: '100000.12'
-          description: |
-            Valor da transação com 2 casas decimais. O valor deve ser o mesmo enviado no consentimento. 
-
-            Para QR Code estático com valor pré-determinado no QR Code ou para QR Code dinâmico com indicação de que o valor não pode ser alterado: O campo amount deve ser preenchido com o valor estabelecido no QR Code. 
-            Caso seja preenchido com valor divergente do QR Code, deve ser retornado um erro HTTP Status 422.
+          $ref: '#/components/schemas/Amount'
         currency:
           type: string
           maxLength: 3
@@ -2188,6 +2204,8 @@ components:
               properties:
                 type:
                   $ref: '#/components/schemas/EnumPaymentType'
+                porpuse:
+                  $ref: '#/components/schemas/Porpuse'
                 schedule:
                   $ref: '#/components/schemas/Schedule'
                 date:
@@ -2211,16 +2229,7 @@ components:
                     Código da moeda nacional segundo modelo ISO-4217, ou seja, 'BRL'.
                     Todos os valores monetários informados estão representados com a moeda vigente do Brasil.
                 amount:
-                  type: string
-                  minLength: 4
-                  maxLength: 19
-                  pattern: '^((\d{1,16}\.\d{2}))$'
-                  example: '100000.12'
-                  description: |
-                    Valor da transação com 2 casas decimais. O valor deve ser o mesmo enviado no consentimento. 
-
-                    Para QR Code estático com valor pré-determinado no QR Code ou para QR Code dinâmico com indicação de que o valor não pode ser alterado: O campo amount deve ser preenchido com o valor estabelecido no QR Code. 
-                    Caso seja preenchido com valor divergente do QR Code, deve ser retornado um erro HTTP Status 422.
+                  $ref: '#/components/schemas/Amount'
                 ibgeTownCode:
                   type: string
                   minLength: 7
@@ -2506,16 +2515,7 @@ components:
                   - currency
                 properties:
                   amount:
-                    type: string
-                    minLength: 4
-                    maxLength: 19
-                    pattern: '^((\d{1,16}\.\d{2}))$'
-                    example: '100000.12'
-                    description: |
-                      Valor da transação com 2 casas decimais. O valor deve ser o mesmo enviado no consentimento. 
-
-                      Para QR Code estático com valor pré-determinado no QR Code ou para QR Code dinâmico com indicação de que o valor não pode ser alterado: O campo amount deve ser preenchido com o valor estabelecido no QR Code. 
-                      Caso seja preenchido com valor divergente do QR Code, deve ser retornado um erro HTTP Status 422.
+                    $ref: '#/components/schemas/Amount'
                   currency:
                     type: string
                     maxLength: 3
