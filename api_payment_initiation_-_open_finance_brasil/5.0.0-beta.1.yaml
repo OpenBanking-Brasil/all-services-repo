@@ -603,6 +603,37 @@ components:
       schema:
         $ref: '#/components/schemas/X-V'
   schemas:
+    TxId:
+      type: string
+      pattern: '^[a-zA-Z0-9]{1,35}$'
+      maxLength: 35
+      example: E00038166201907261559y6j6
+      description: |
+        Trata-se de um identificador de transação que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informação permitirá ao recebedor identificar e correlacionar a transferência, quando recebida, com a apresentação das instruções ao pagador.
+        Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) são:
+        - Letras minúsculas, de ‘a’ a ‘z’
+        - Letras maiúsculas, de ‘A’ a ‘z’
+        - Dígitos decimais, de ‘0’ a ‘9’
+
+        [Restrição] Preenchimento condicional de acordo com o conteúdo do campo localInstument:
+
+        – MANU - O campo transactionIdentification não deve ser preenchido.  
+        – DICT - O campo transactionIdentification não deve ser preenchido.  
+        – INIC - O campo transactionIdentification deve ser preenchido obrigatoriamente e deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
+        – QRES - Caso o QR Code estático possua o dado <i><<i/>TxId<i>><i/> preenchido, o campo transactionIdentification deverá ser preenchido com este valor, caso o QR Code não possua o <i><<i/>TxId<i>><i/> o campo transactionIdentification não deverá ser preenchido. O <i><<i/>TxId<i>><i/> deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
+        – QRDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
+        – APDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
+        – APES - Caso o QR Code estático possua o dado <i><<i/>TxId<i>><i/> preenchido, o campo transactionIdentification deverá ser preenchido com este valor, caso o QR Code não possua o <i><<i/>TxId<i>><i/> o campo transactionIdentification não deverá ser preenchido. O <i><<i/>TxId<i>><i/> deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).
+
+        A detentora de conta deve validar se a condicionalidade e o formato do campo foram atendidas pela iniciadora de pagamento.  
+    Proxy:
+      type: string
+      maxLength: 77
+      pattern: '[\w\W\s]*'
+      example: '12345678901'
+      description: |
+        Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória. No caso de telefone celular deve ser informado no padrão E.1641. Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres. No caso de CPF deverá ser informado com 11 números, sem pontos ou traços. Para o caso de CNPJ deverá ser informado com 14 caracteres, sem pontos ou traços. No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC4122. Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, APDN, APES, QRDN ou QRES e validar o campo creditorAccount. Esta validação é opcional caso o localInstrument for igual a INIC.   
+        [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, APDN, APES, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
     X-V:
       description: 'Cabeçalho que indica a versão implementada da API pela instituição financeira para atender à solicitação. Deve ser preenchido de forma completa, por exemplo: x-v : 1.0.2.'
       type: string
@@ -943,16 +974,15 @@ components:
                   530515RP12345678-201950300017BR.GOV.BCB.BRCODE01051.0.080450014BR.GOV.BCB.PIX0123PADRAO.URL.PIX/0123AB
                   CD81390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304EB76
                 description: |
-                  Sequência de caracteres correspondente ao QR Code disponibilizado para o pagador. É a sequência de caracteres que seria lida pelo leitor de QR Code e que deve permitir a obtenção dos dados do pagador por meio de consulta à DICT. Essa funcionalidade é aplicável tanto para QR Codes estáticos quanto QR Codes dinâmicos (Câmera ou NFC). No arranjo do Pix, trata-se da mesma sequência gerada e/ou lida pela funcionalidade Pix Copia e Cola. Este campo deverá ser no formato UTF-8.   
-                  [Restrição] Preenchimento obrigatório quando o valor do campo “/data/localInstrument” for igual a QRES, QRDN ou APDN, respeitando o tamanho máximo de 512 bytes  
+                  Sequência de caracteres que corresponde ao QR Code disponibilizado para o pagador. É a sequência de
+                  caracteres que seria lida pelo leitor de QR Code, e deve propiciar o retorno dos dados do pagador após
+                  consulta na DICT. Essa funcionalidade é disponível tanto para QR Code Estático quanto QR Code Dinâmico
+                  (Câmera ou NFC). No arranjo do Pix, trata-se da mesma sequência gerada e/ou lida pela funcionalidade Pix
+                  Copia e Cola. Este campo deverá ser no formato UTF-8.
+                  [Restrição] Preenchimento obrigatório quando o valor do campo “/data/localInstrument” for igual a QRES,
+                  QRDN, APDN ou APES, observado o tamanho máximo de 512 bytes.
               proxy:
-                type: string
-                maxLength: 77
-                pattern: '[\w\W\s]*'
-                example: '12345678901'
-                description: |
-                  Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, CPF/CNPJ ou chave aleatória. No caso de telefone celular, deve ser informado no padrão E.1641. Para e-mail, deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx), com no máximo 77 caracteres. Para CPF, deverá ser informado com 11 números, sem pontos ou traços. Para o caso de CNPJ, deverá ser informado com 14 caracteres, sem pontos ou traços. No caso de chave aleatória, deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC 4122. Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, APDN, QRDN ou QRES e também validar o campo creditorAccount. Esta validação é opcional caso o localInstrument for igual a INIC.   
-                  [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument  for igual INIC, DICT, APDN, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix  
+                $ref: '#/components/schemas/Proxy'
               cnpjInitiator:
                 type: string
                 pattern: '^[0-9A-Z]{12}[0-9]{2}$'
@@ -960,27 +990,7 @@ components:
                 example: '50685362000135'
                 description: CNPJ do Iniciador de Pagamento devidamente habilitado para a prestação de Serviço de Iniciação no Pix.
               transactionIdentification:
-                type: string
-                pattern: '^[a-zA-Z0-9]{1,35}$'
-                maxLength: 35
-                example: E00038166201907261559y6j6
-                description: |
-                  Trata-se de um identificador de transação que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informação permitirá ao recebedor identificar e correlacionar a transferência, quando recebida, com a apresentação das instruções ao pagador.
-                  Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) são:
-                  - Letras minúsculas, de ‘a’ a ‘z’
-                  - Letras maiúsculas, de ‘A’ a ‘z’
-                  - Dígitos decimais, de ‘0’ a ‘9’
-
-                  [Restrição] Preenchimento condicional de acordo com o conteúdo do campo localInstument:
-
-                  – MANU - O campo transactionIdentification não deve ser preenchido.  
-                  – DICT - O campo transactionIdentification não deve ser preenchido.  
-                  – INIC - O campo transactionIdentification deve ser preenchido obrigatoriamente e deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-                  – QRES - Caso o QR Code estático possua o dado <i><<i/>TxId<i>><i/> preenchido, o campo transactionIdentification deverá ser preenchido com este valor, caso o QR Code não possua o <i><<i/>TxId<i>><i/> o campo transactionIdentification não deverá ser preenchido. O <i><<i/>TxId<i>><i/> deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-                  – QRDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-                  – APDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9])
-
-                  A detentora de conta deve validar se a condicionalidade e o formato do campo foram atendidas pela iniciadora de pagamento.  
+                $ref: '#/components/schemas/TxId'
               authorisationFlow:
                 type: string
                 enum:
@@ -1156,16 +1166,15 @@ components:
             530515RP12345678-201950300017BR.GOV.BCB.BRCODE01051.0.080450014BR.GOV.BCB.PIX0123PADRAO.URL.PIX/0123AB
             CD81390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304EB76
           description: |
-            Sequência de caracteres correspondente ao QR Code disponibilizado para o pagador. É a sequência de caracteres que seria lida pelo leitor de QR Code e que deve permitir a obtenção dos dados do pagador por meio de consulta à DICT. Essa funcionalidade é aplicável tanto para QR Codes estáticos quanto QR Codes dinâmicos (Câmera ou NFC). No arranjo do Pix, trata-se da mesma sequência gerada e/ou lida pela funcionalidade Pix Copia e Cola. Este campo deverá ser no formato UTF-8.  
-            [Restrição] Preenchimento obrigatório quando o valor do campo “/data/localInstrument” for igual a QRES, QRDN ou APDN, respeitando o tamanho máximo de 512 bytes  
+            Sequência de caracteres que corresponde ao QR Code disponibilizado para o pagador. É a sequência de
+            caracteres que seria lida pelo leitor de QR Code, e deve propiciar o retorno dos dados do pagador após
+            consulta na DICT. Essa funcionalidade é disponível tanto para QR Code Estático quanto QR Code Dinâmico
+            (Câmera ou NFC). No arranjo do Pix, trata-se da mesma sequência gerada e/ou lida pela funcionalidade Pix
+            Copia e Cola. Este campo deverá ser no formato UTF-8.
+            [Restrição] Preenchimento obrigatório quando o valor do campo “/data/localInstrument” for igual a QRES,
+            QRDN, APDN ou APES, observado o tamanho máximo de 512 bytes.
         proxy:
-          type: string
-          maxLength: 77
-          pattern: '[\w\W\s]*'
-          example: '12345678901'
-          description: |
-            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, CPF/CNPJ ou chave aleatória. No caso de telefone celular, deve ser informado no padrão E.1641. Para e-mail, deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx), com no máximo 77 caracteres. Para CPF, deverá ser informado com 11 números, sem pontos ou traços. Para o caso de CNPJ, deverá ser informado com 14 caracteres, sem pontos ou traços. No caso de chave aleatória, deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC 4122. Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, APDN, QRDN ou QRES e também validar o campo creditorAccount. Esta validação é opcional caso o localInstrument for igual a INIC.  
-            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument  for igual INIC, DICT, APDN, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix 
+          $ref: '#/components/schemas/Proxy'
         creditorAccount:
           $ref: '#/components/schemas/CreditorAccount'
     EndToEndId:
@@ -1294,6 +1303,7 @@ components:
         - QRDN
         - QRES
         - INIC
+        - APES
         - APDN
       example: DICT
       description: |
@@ -1301,8 +1311,9 @@ components:
         - MANU - Inserção manual de dados da conta transacional
         - DICT - Inserção manual de chave Pix
         - APDN - Leitura de QR code dinâmico via NFC  
-        - QRDN - Leitura QR code dinâmico via câmera
-        - QRES - Leitura de QR code estático (NFC ou câmera) 
+        - QRDN - Leitura QR code dinâmico (exceto NFC)
+        - APES - Leitura de QR code estático via NFC
+        - QRES - Leitura de QR code estático (exceto NFC) 
         - INIC - Indica que o recebedor (creditor) contratou o Iniciador de Pagamentos especificamente para realizar iniciações de pagamento em que o beneficiário é previamente conhecido.
         
         [Restrição] Se /data/payment/schedule enviado com valor diferente de single durante a criação do consentimento, apenas os métodos MANU, DICT ou QRES são permitidos.
@@ -2363,20 +2374,7 @@ components:
             Uma string com data e hora conforme especificação RFC-3339,
             sempre com a utilização de timezone UTC(UTC time format).
         proxy:
-          type: string
-          maxLength: 77
-          pattern: '[\w\W\s]*'
-          example: '12345678901'
-          description: |
-            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.
-            No caso de telefone celular deve ser informado no padrão E.1641.
-            Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres.
-            No caso de CPF deverá ser informado com 11 números, sem pontos ou traços.
-            Para o caso de CNPJ deverá ser informado com 14 números, sem pontos ou traços.
-            No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
-            Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
-            Esta validação é opcional caso o localInstrument for igual a INIC.
-            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
+          $ref: '#/components/schemas/Proxy'
         status:
           $ref: '#/components/schemas/EnumPaymentStatusType'
         rejectionReason:
@@ -2392,27 +2390,7 @@ components:
         payment:
           $ref: '#/components/schemas/PaymentPix'
         transactionIdentification:
-          type: string
-          pattern: '^[a-zA-Z0-9]{1,35}$'
-          maxLength: 35
-          example: E00038166201907261559y6j6
-          description: |
-            Trata-se de um identificador de transação que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informação permitirá ao recebedor identificar e correlacionar a transferência, quando recebida, com a apresentação das instruções ao pagador.
-            Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) são:
-            - Letras minúsculas, de ‘a’ a ‘z’
-            - Letras maiúsculas, de ‘A’ a ‘z’
-            - Dígitos decimais, de ‘0’ a ‘9’
-
-            [Restrição] Preenchimento condicional de acordo com o conteúdo do campo localInstument:
-
-            – MANU - O campo transactionIdentification não deve ser preenchido.  
-            – DICT - O campo transactionIdentification não deve ser preenchido.  
-            – INIC - O campo transactionIdentification deve ser preenchido obrigatoriamente e deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-            – QRES - Caso o QR Code estático possua o dado <i><<i/>TxId<i>><i/> preenchido, o campo transactionIdentification deverá ser preenchido com este valor, caso o QR Code não possua o <i><<i/>TxId<i>><i/> o campo transactionIdentification não deverá ser preenchido. O <i><<i/>TxId<i>><i/> deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-            – QRDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-            – APDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9])
-
-            A detentora de conta deve validar se a condicionalidade e o formato do campo foram atendidas pela iniciadora de pagamento.  
+          $ref: '#/components/schemas/TxId'
         remittanceInformation:
           type: string
           maxLength: 140
@@ -2509,20 +2487,7 @@ components:
                   Uma string com data e hora conforme especificação RFC-3339,
                   sempre com a utilização de timezone UTC(UTC time format).
               proxy:
-                type: string
-                maxLength: 77
-                pattern: '[\w\W\s]*'
-                example: '12345678901'
-                description: |
-                  Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.
-                  No caso de telefone celular deve ser informado no padrão E.1641.
-                  Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres.
-                  No caso de CPF deverá ser informado com 11 números, sem pontos ou traços.
-                  Para o caso de CNPJ deverá ser informado com 14 números, sem pontos ou traços.
-                  No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
-                  Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
-                  Esta validação é opcional caso o localInstrument for igual a INIC.
-                  [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
+                $ref: '#/components/schemas/Proxy'
               status:
                 $ref: '#/components/schemas/EnumPaymentStatusType'
               rejectionReason:
@@ -2562,27 +2527,7 @@ components:
                       Código da moeda nacional segundo modelo ISO-4217, ou seja, 'BRL'.  
                       Todos os valores monetários informados estão representados com a moeda vigente do Brasil.
               transactionIdentification:
-                type: string
-                pattern: '^[a-zA-Z0-9]{1,35}$'
-                maxLength: 35
-                example: E00038166201907261559y6j6
-                description: |
-                  Trata-se de um identificador de transação que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informação permitirá ao recebedor identificar e correlacionar a transferência, quando recebida, com a apresentação das instruções ao pagador.
-                  Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) são:
-                  - Letras minúsculas, de ‘a’ a ‘z’
-                  - Letras maiúsculas, de ‘A’ a ‘z’
-                  - Dígitos decimais, de ‘0’ a ‘9’
-
-                  [Restrição] Preenchimento condicional de acordo com o conteúdo do campo localInstument:
-
-                  – MANU - O campo transactionIdentification não deve ser preenchido.  
-                  – DICT - O campo transactionIdentification não deve ser preenchido.  
-                  – INIC - O campo transactionIdentification deve ser preenchido obrigatoriamente e deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-                  – QRES - Caso o QR Code estático possua o dado <i><<i/>TxId<i>><i/> preenchido, o campo transactionIdentification deverá ser preenchido com este valor, caso o QR Code não possua o <i><<i/>TxId<i>><i/> o campo transactionIdentification não deverá ser preenchido. O <i><<i/>TxId<i>><i/> deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-                  – QRDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-                  – APDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9])
-
-                  A detentora de conta deve validar se a condicionalidade e o formato do campo foram atendidas pela iniciadora de pagamento.  
+                $ref: '#/components/schemas/TxId'
               remittanceInformation:
                 type: string
                 maxLength: 140
@@ -2671,20 +2616,7 @@ components:
             Uma string com data e hora conforme especificação RFC-3339,
             sempre com a utilização de timezone UTC(UTC time format).
         proxy:
-          type: string
-          maxLength: 77
-          pattern: '[\w\W\s]*'
-          example: '12345678901'
-          description: |
-            Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatória.
-            No caso de telefone celular deve ser informado no padrão E.1641.
-            Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no máximo 77 caracteres.
-            No caso de CPF deverá ser informado com 11 números, sem pontos ou traços.
-            Para o caso de CNPJ deverá ser informado com 14 números, sem pontos ou traços.
-            No caso de chave aleatória deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
-            Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
-            Esta validação é opcional caso o localInstrument for igual a INIC.
-            [Restrição] Se localInstrument for igual a MANU, o campo proxy não deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
+          $ref: '#/components/schemas/Proxy'
         status:
           $ref: '#/components/schemas/EnumPaymentStatusType'
         rejectionReason:
@@ -2700,27 +2632,7 @@ components:
         payment:
           $ref: '#/components/schemas/PaymentPix'
         transactionIdentification:
-          type: string
-          pattern: '^[a-zA-Z0-9]{1,35}$'
-          maxLength: 35
-          example: E00038166201907261559y6j6
-          description: |
-            Trata-se de um identificador de transação que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informação permitirá ao recebedor identificar e correlacionar a transferência, quando recebida, com a apresentação das instruções ao pagador.
-            Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) são:
-            - Letras minúsculas, de ‘a’ a ‘z’
-            - Letras maiúsculas, de ‘A’ a ‘z’
-            - Dígitos decimais, de ‘0’ a ‘9’
-
-            [Restrição] Preenchimento condicional de acordo com o conteúdo do campo localInstument:
-
-            – MANU - O campo transactionIdentification não deve ser preenchido.  
-            – DICT - O campo transactionIdentification não deve ser preenchido.  
-            – INIC - O campo transactionIdentification deve ser preenchido obrigatoriamente e deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-            – QRES - Caso o QR Code estático possua o dado <i><<i/>TxId<i>><i/> preenchido, o campo transactionIdentification deverá ser preenchido com este valor, caso o QR Code não possua o <i><<i/>TxId<i>><i/> o campo transactionIdentification não deverá ser preenchido. O <i><<i/>TxId<i>><i/> deve conter até 25 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-            – QRDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9]).  
-            – APDN - Será obrigatório seu preenchimento com o <i><<i/>TxId<i>><i/> do payload JSON do QR Code dinâmico. O <i><<i/>TxId<i>><i/> deve conter entre 26 e 35 caracteres alfanuméricos ([a-z|A-Z|0-9])
-
-            A detentora de conta deve validar se a condicionalidade e o formato do campo foram atendidas pela iniciadora de pagamento.  
+          $ref: '#/components/schemas/TxId'
         remittanceInformation:
           type: string
           maxLength: 140
