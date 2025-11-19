@@ -174,7 +174,6 @@ info:
         &ensp;5.1.11 - Tempo expirado consumo: O usuário não finalizou o fluxo de pagamento e o consentimento expirou (TEMPO_EXPIRADO_CONSUMO).   
         &ensp;5.1.12 - Autenticação divergente: O usuário autenticado no ambiente da detentora não é o mesmo usuário autenticado no ambiente da iniciadora e que criou o consentimento (AUTENTICACAO_DIVERGENTE).   
       5.2 **[Momentos obrigatórios de validação dos rejectionReasons de acordo com o funil de consentimentos.](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/150863940) Para casos em que um consentimento for rejeitado por mais de um motivo, seguir a ordem de prioridade da tabela.**
-      
       ```
       |----------------------------------|------------------------------|---------------------|
       | Etapas do funil de consentimento | rejectionReason/code         | Ordem de prioridade |
@@ -203,9 +202,18 @@ info:
       |                                  | TEMPO_EXPIRADO_CONSUMO       |          3          |
       |----------------------------------|------------------------------|---------------------|
       ```
-      Existem dois `endpoints` para cancelamento de pagamentos, um deles é o _PATCH /pix/payments/{paymentId}_ e o outro é o _PATCH /pix/payments/consents/{consentId}_.
+      5.3 **Momentos obrigatórios de validação dos rejectionReasons de consentimentos autorizados via JSR**  
+      Consentimentos autorizados a partir do fluxo sem redirecionamento possuem um funil de conversão diferente, dado que não há o redirecionamento e este é um grande segregador das etapas do funil.  
+      Devido a isso, as validações e a ordem que estas devem ser feitas, descritas no tópico anterior, não se aplicam integralmente aos consentimentos que foram autorizados no fluxo sem redirecionamento. Para consentimentos autorizados via fluxo sem redirecionamento, os únicos motivos de rejeição cabíveis são:
+      - TEMPO_EXPIRADO_AUTORIZACAO – Utilizado quando o gesto FIDO não foi realizado a tempo pelo cliente final
+      - TEMPO_EXPIRADO_CONSUMO – Utilizado quando o ITP, em posse do consentimento autorizado, não envia o pagamento.
+      - FALHA_INFRAESTRUTURA – Utilizado quando uma falha sistêmica impediu o avanço no processo do consentimento.  
+      Demais validações que antes ocorriam no consentimento, agora devem ocorrer apenas em momento de pagamento. Permitindo assim que a detentora de contas tenha tempo de realizar as validações de maneira assíncrona a autorização do consentimento
+
+      ### Cancelamento de Pagamentos
+      Existem dois `endpoints` para cancelamento de pagamentos, um deles é o _PATCH /pix/payments/{paymentId}_ e o outro é o _PATCH /consents/{consentId}/pix/payments_.
       - O _PATCH /pix/payments/{paymentId}_ deve ser utilizado para o cancelamento de um pagamento de forma unitária. Não deve ser utilizado para o cancelamento de todos os agendamentos recorrentes associados a um consentimento.
-      - O _PATCH /pix/payments/consents/{consentId}_ deve ser utilizado no cancelamento de todas as ocorrências de pagamentos agendados presentes em uma recorrência de pagamentos. Todos os pagamentos associados ao consentimento informado e passíveis de cancelamento (ainda não liquidados, com os status PDNG e SCHD) deverão ser cancelados.
+      - O _PATCH /consents/{consentId}/pix/payments_ deve ser utilizado no cancelamento de todas as ocorrências de pagamentos agendados presentes em uma recorrência de pagamentos. Todos os pagamentos associados ao consentimento informado e passíveis de cancelamento (ainda não liquidados, com os status PDNG e SCHD) deverão ser cancelados.
       
       ## Quantidade máxima permitida para agendamentos recorrentes
       A quantidade máxima de pagamentos que podem transitar do iniciador para o detentor são de 60 pagamentos, independente do modelo de recorrência definido no consentimento, respeitando o prazo máximo de dois anos para agendamentos. 
@@ -786,6 +794,8 @@ components:
                   - PAGAMENTO_RECUSADO_SPI: Pagamento recusado no Sistema de Pagamentos Instantâneos (SPI).
                   - ERRO_IDEMPOTENCIA: Erro idempotência.
                   - CONSENTIMENTO_PENDENTE_AUTORIZACAO: Consentimento pendente autorização de múltiplas alçadas (status “PARTIALLY_ACCEPTED”).
+                  - CONTA_NAO_PERMITE_PAGAMENTO – A conta selecionada é do tipo [salario/investimento/liquidação/outros] e não permite realizar esse pagamento.
+                  - QRCODE_INVALIDO - O QRCode utilizado para a iniciação de pagamento não é válido.
               detail:
                 type: string
                 maxLength: 2048
@@ -807,6 +817,8 @@ components:
                   - PAGAMENTO_RECUSADO_SPI: [código de erro conforme tabela de domínios reason PACS.002].
                   - ERRO_IDEMPOTENCIA: Conteúdo da mensagem (claim data) diverge do conteúdo associado a esta chave de idempotência (x-idempotency-key).
                   - CONSENTIMENTO_PENDENTE_AUTORIZACAO: Consentimento pendente autorização de múltiplas alçadas (status “PARTIALLY_ACCEPTED”).
+                  - CONTA_NAO_PERMITE_PAGAMENTO – A conta selecionada é do tipo [salario/investimento/liquidação/outros] e não permite realizar esse pagamento.
+                  - QRCODE_INVALIDO - O QRCode utilizado para a iniciação de pagamento não é válido.
         meta:
           $ref: '#/components/schemas/Meta'
     422ResponseErrorCreatePixPayment:
@@ -1305,6 +1317,8 @@ components:
         - PAGAMENTO_RECUSADO_SPI
         - ERRO_IDEMPOTENCIA
         - CONSENTIMENTO_PENDENTE_AUTORIZACAO
+        - CONTA_NAO_PERMITE_PAGAMENTO
+        - QRCODE_INVALIDO
       example: SALDO_INSUFICIENTE
       description: |
         Códigos de erros previstos na criação da iniciação de pagamento:
@@ -1322,6 +1336,8 @@ components:
         - PAGAMENTO_RECUSADO_SPI: Pagamento recusado no Sistema de Pagamentos Instantâneos (SPI).
         - ERRO_IDEMPOTENCIA: Erro idempotência.
         - CONSENTIMENTO_PENDENTE_AUTORIZACAO: Consentimento pendente autorização de múltiplas alçadas (status “PARTIALLY_ACCEPTED”)
+        - CONTA_NAO_PERMITE_PAGAMENTO – A conta selecionada é do tipo [salario/investimento/liquidação/outros] e não permite realizar esse pagamento.
+        - QRCODE_INVALIDO - O QRCode utilizado para a iniciação de pagamento não é válido.
     EnumLocalInstrument:
       type: string
       enum:
@@ -1451,6 +1467,8 @@ components:
         - CONTAS_ORIGEM_DESTINO_IGUAIS
         - FALHA_AGENDAMENTO_PAGAMENTOS
         - CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO
+        - CONTA_NAO_PERMITE_PAGAMENTO
+        - QRCODE_INVALIDO
       example: SALDO_INSUFICIENTE
       description: |
         Define o código da razão pela qual o pagamento foi rejeitado
@@ -1491,6 +1509,10 @@ components:
 
         - FALHA_AGENDAMENTO_PAGAMENTOS - Falha ao agendar pagamentos.  
 
+        - CONTA_NAO_PERMITE_PAGAMENTO – A conta selecionada é do tipo [salario/investimento/liquidação/outros] e não permite realizar esse pagamento.  
+
+        - QRCODE_INVALIDO - O QRCode utilizado para a iniciação de pagamento não é válido.  
+
         Os rejectionReasons FALHA_INFRAESTRUTURA e CONTAS_ORIGEM_DESTINO_IGUAIS não serão excluídos, apenas deixaram de ser utilizados, permitindo assim, retrocompatibilidade e integridade com as versões anteriores da API.  
     EnumRejectionReasonType:
       type: string
@@ -1512,6 +1534,8 @@ components:
         - FALHA_INFRAESTRUTURA_DETENTORA
         - CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO
         - CONTAS_ORIGEM_DESTINO_IGUAIS
+        - CONTA_NAO_PERMITE_PAGAMENTO
+        - QRCODE_INVALIDO
       example: SALDO_INSUFICIENTE
       description: |
         Define o código da razão pela qual o pagamento foi rejeitado
@@ -1549,6 +1573,10 @@ components:
         - CHAVE_PIX_DIVERGENTE_AGENDAMENTO_LIQUIDACAO: Divergências entre dados das chaves Pix no agendamento e na liquidação
 
         - CONTAS_ORIGEM_DESTINO_IGUAIS - Indica uma tentativa de pagamento onde a conta origem e a conta de destino são iguais.  
+
+        - CONTA_NAO_PERMITE_PAGAMENTO – A conta selecionada é do tipo [salario/investimento/liquidação/outros] e não permite realizar esse pagamento.
+        
+        - QRCODE_INVALIDO - O QRCode utilizado para a iniciação de pagamento não é válido.
 
         Os rejectionReasons FALHA_INFRAESTRUTURA e CONTAS_ORIGEM_DESTINO_IGUAIS não serão excluídos, apenas deixaram de ser utilizados, permitindo assim, retrocompatibilidade e integridade com as versões anteriores da API.   
     EnumPaymentCancellationReasonType:
@@ -3260,4 +3288,4 @@ components:
           schema:
             $ref: '#/components/schemas/XFapiInteractionId'
         x-v:
-            $ref: '#/components/headers/X-V'
+            $ref: '#/components/headers/X-V' 
