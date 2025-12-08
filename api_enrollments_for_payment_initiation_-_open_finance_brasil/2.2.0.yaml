@@ -704,6 +704,7 @@ paths:
             - 'enrollment:enrollmentId'
             - recurring-payments
             - payments
+
 components:
   headers:
     xFapiInteractionId:
@@ -1351,7 +1352,10 @@ components:
       properties:
         data:
           type: object
-          description: Informa a integridade do dispositivo e app
+          description: |
+            Conjunto de sinais extraídos do dispositivo do usuário para ativação do consentimento de pagamento.  
+            Em casos de autenticação cross-platform, deve ser considerado o dispositivo utilizado para acesso ao canal da instituição, não o autenticador externo utilizado para assinatura.   
+            A obrigatoriedade das informações variam de acordo com a plataforma utilizada.  
           required:
             - deviceId
             - osVersion
@@ -1567,8 +1571,9 @@ components:
                 - screenDimensions
                 - accountTenure
               description: |
-                Conjunto de sinais extraídos do dispositivo do usuário para ativação do consentimento de pagamento.
-                A obrigatoriedade das informações variam de acordo com a plataforma utilizada.
+                Conjunto de sinais extraídos do dispositivo do usuário para ativação do consentimento de pagamento.  
+                Em casos de autenticação cross-platform, deve ser considerado o dispositivo utilizado para acesso ao canal da instituição, não o autenticador externo utilizado para assinatura.   
+                A obrigatoriedade das informações variam de acordo com a plataforma utilizada.  
               properties:
                 deviceId:
                   type: string
