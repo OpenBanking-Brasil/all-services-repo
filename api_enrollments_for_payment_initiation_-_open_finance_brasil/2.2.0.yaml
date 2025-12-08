@@ -87,6 +87,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityEnrollment'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -130,6 +132,8 @@ paths:
           $ref: '#/components/responses/NotAcceptable'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -250,10 +254,14 @@ paths:
           $ref: '#/components/responses/MethodNotAllowed'
         '406':
           $ref: '#/components/responses/NotAcceptable'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
         '422':
           $ref: '#/components/responses/UnprocessableEntityEnrollmentCancel'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -310,6 +318,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityEnrollmentFidoRegistrationOptions'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -378,6 +388,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityEnrollmentFidoRegistration'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -493,6 +505,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityEnrollmentFidoSignOptions'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -551,6 +565,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityEnrollmentRiskSignals'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -614,6 +630,8 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityConsentsAuthorization'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -678,10 +696,14 @@ paths:
           $ref: '#/components/responses/MethodNotAllowed'
         '406':
           $ref: '#/components/responses/NotAcceptable'
+        '415':
+          $ref: '#/components/responses/UnsupportedMediaType'
         '422':
           $ref: '#/components/responses/UnprocessableEntityRecurringConsentsAuthorization'
         '500':
           $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/GatewayTimeout'
         '529':
           $ref: '#/components/responses/SiteIsOverloaded'
         default:
@@ -2758,6 +2780,8 @@ components:
             'enrollment:enrollmentId': Permite realizar atualização de um registro com a permissão do cliente.      
             nrp-consents: Consentimento para pagamentos sem redirecionamento.
   responses:
+    GatewayTimeout:
+      description: A requisição não foi atendida dentro do tempo limite estabelecido.  
     BadRequest:
       description: 'A requisição foi malformada, omitindo atributos obrigatórios, seja no payload ou através de atributos na URL.'
       content:
