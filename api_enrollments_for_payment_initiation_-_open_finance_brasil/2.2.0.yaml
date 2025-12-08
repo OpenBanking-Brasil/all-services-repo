@@ -1399,7 +1399,7 @@ components:
               description: |
                 Indica se o dispositivo atualmente está com permissão de “root”.
  
-                [Restrição] Campos de envio obrigatório quando o sistema operacional utilizado pelo usuário durante a vinculação de conta ou realização do pagamento for Android ou iOS.
+                [Restrição] Campos de envio obrigatório quando o usuário utilizar uma aplicação nativa para Android ou iOS.  
               example: false
             screenBrightness:
               type: number
@@ -1411,7 +1411,7 @@ components:
 
                [iOS] O valor é ponto flutuante entre “0.0” e “1.0”. Referência no [link](https://developer.apple.com/documentation/uikit/uiscreen/).
 
-               [Restrição] Campos de envio obrigatório quando o sistema operacional utilizado pelo usuário durante a vinculação de conta ou realização do pagamento for Android ou iOS.
+                [Restrição] Campos de envio obrigatório quando o usuário utilizar uma aplicação nativa para Android ou iOS.  
               example: 255
             elapsedTimeSinceBoot:
               type: integer
@@ -1423,7 +1423,7 @@ components:
 
                 [iOS] Informação obtida através do [link](https://developer.apple.com/documentation/kernel/kern/).
 
-                [Restrição] Campos de envio obrigatório quando o sistema operacional utilizado pelo usuário durante a vinculação de conta ou realização do pagamento for Android ou iOS.
+                [Restrição] Campos de envio obrigatório quando o usuário utilizar uma aplicação nativa para Android ou iOS.  
               example: 6356027
             osVersion:
               type: string
@@ -1609,7 +1609,7 @@ components:
                   description: |
                     Indica se o dispositivo atualmente está com permissão de “root”.
 
-                    [Restrição] Campos de envio obrigatório quando o sistema operacional utilizado pelo usuário durante a vinculação de conta ou realização do pagamento for Android ou iOS.
+                    [Restrição] Campos de envio obrigatório quando o usuário utilizar uma aplicação nativa para Android ou iOS.  
                 screenBrightness:
                   type: number
                   format: double
@@ -1620,7 +1620,7 @@ components:
 
                     [iOS] O valor é ponto flutuante entre “0.0” e “1.0”. Referência no [link](https://developer.apple.com/documentation/uikit/uiscreen/).
 
-                    [Restrição] Campos de envio obrigatório quando o sistema operacional utilizado pelo usuário durante a vinculação de conta ou realização do pagamento for Android ou iOS.
+                    [Restrição] Campos de envio obrigatório quando o usuário utilizar uma aplicação nativa para Android ou iOS.  
                 elapsedTimeSinceBoot:
                   type: integer
                   format: int64
@@ -1631,7 +1631,7 @@ components:
 
                     [iOS] Informação obtida através do [link](https://developer.apple.com/documentation/kernel/kern/).
 
-                    [Restrição] Campos de envio obrigatório quando o sistema operacional utilizado pelo usuário durante a vinculação de conta ou realização do pagamento for Android ou iOS.
+                    [Restrição] Campos de envio obrigatório quando o usuário utilizar uma aplicação nativa para Android ou iOS.  
                 osVersion:
                   type: string
                   description: |
