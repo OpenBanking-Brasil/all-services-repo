@@ -321,7 +321,7 @@ paths:
       tags:
         - Registering Entity
       summary: Obtém os dados necessários para identificar o contrato a ser portado junto a averbadora.
-      description: Obtém os dados necessários para identificar o contrato a ser portado junto a averbadora. Obs.: Este endpoint deverá ser utilizado momentos antes da consulta da proposta do cliente para validar se o cliente deu o consentimento para aquele contrato.
+      description: 'Obtém os dados necessários para identificar o contrato a ser portado junto a averbadora. Obs.: Este endpoint deverá ser utilizado momentos antes da consulta da proposta do cliente para validar se o cliente deu o consentimento para aquele contrato.'
       operationId: payrollCreditPortabilityGetCreditOperationsContractIdRegisteringEntity
       parameters:
         - $ref: '#/components/parameters/contractId'
