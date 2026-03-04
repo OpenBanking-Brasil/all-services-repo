@@ -739,7 +739,7 @@ components:
       description: |
        Valor da transação com 2 casas decimais. Para QR Code estático com valor pré-determinado no QR Code e para QR Code dinâmico de cobrança ou QRCode Dinâmico de Pix Saque com indicação de que o valor não pode ser alterado ("modalidadeAlteracao" igual a 0): O campo amount deve ser preenchido com o valor estabelecido no QR Code.  
        Caso seja preenchido com valor divergente do QR Code que não permita alteração, deve ser retornado um erro HTTP Status 422 VALOR_INVALIDO.
-    Porpuse:
+    Purpose:
       description: |
         Representa qual a finalidade da transação recebida.  
         - IMMEDIATE: Deve ser utilizado quando o pagamento gerado pelo consentimento for único e imediato e não for um Pix    Saque ou Pix Troco;  
@@ -852,7 +852,8 @@ components:
                 description: |
                   Título específico do erro reportado, de acordo com o código enviado:
 
-                  • PAGAMENTO_NAO_PERMITE_CANCELAMENTO: Pagamento não permite cancelamento
+                  • PAGAMENTO_NAO_PERMITE_CANCELAMENTO: Pagamento não permite cancelamento   
+                  • ERRO_IDEMPOTENCIA: Conteúdo da mensagem (claim data) diverge do conteúdo associado a esta chave de idempotência (x-idempotency-key).
               detail:
                 type: string
                 maxLength: 2048
@@ -861,7 +862,8 @@ components:
                 description: |
                   Descrição específica do erro de acordo com o código reportado:
 
-                  • PAGAMENTO_NAO_PERMITE_CANCELAMENTO: Pagamento não permite cancelamento
+                  • PAGAMENTO_NAO_PERMITE_CANCELAMENTO: Pagamento não permite cancelamento   
+                  • ERRO_IDEMPOTENCIA: Conteúdo da mensagem (claim data) diverge do conteúdo associado a esta chave de idempotência (x-idempotency-key).
         meta:
           $ref: '#/components/schemas/Meta'
     BusinessEntity:
@@ -918,8 +920,8 @@ components:
               properties:
                 type:
                   $ref: '#/components/schemas/EnumPaymentType'
-                porpuse:
-                  $ref: '#/components/schemas/Porpuse'
+                purpose:
+                  $ref: '#/components/schemas/Purpose'
                 schedule:
                   $ref: '#/components/schemas/Schedule'
                 date:
@@ -1300,11 +1302,13 @@ components:
       type: string
       enum:
         - PAGAMENTO_NAO_PERMITE_CANCELAMENTO
+        - ERRO_IDEMPOTENCIA
       example: PAGAMENTO_NAO_PERMITE_CANCELAMENTO
       description: |
         Códigos de erros previstos na criação da iniciação de pagamento:
 
-        • PAGAMENTO_NAO_PERMITE_CANCELAMENTO: Pagamento não permite cancelamento
+        • PAGAMENTO_NAO_PERMITE_CANCELAMENTO: Pagamento não permite cancelamento   
+        • ERRO_IDEMPOTENCIA: Conteúdo da mensagem (claim data) diverge do conteúdo associado a esta chave de idempotência (x-idempotency-key).
     EnumErrorsCreatePayment:
       type: string
       enum:
@@ -1782,8 +1786,8 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/EnumPaymentType'
-        porpuse:
-          $ref: '#/components/schemas/Porpuse'
+        purpose:
+          $ref: '#/components/schemas/Purpose'
         schedule:
           $ref: '#/components/schemas/Schedule'
         date:
@@ -2237,8 +2241,8 @@ components:
               properties:
                 type:
                   $ref: '#/components/schemas/EnumPaymentType'
-                porpuse:
-                  $ref: '#/components/schemas/Porpuse'
+                purpose:
+                  $ref: '#/components/schemas/Purpose'
                 schedule:
                   $ref: '#/components/schemas/Schedule'
                 date:
