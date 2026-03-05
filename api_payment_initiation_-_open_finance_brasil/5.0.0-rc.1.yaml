@@ -1709,7 +1709,7 @@ components:
             O CNPJ será utilizado com 14 números e deverá ser informado sem pontos ou traços.
         name:
           type: string
-          pattern: ^([A-Za-zÀ-ÖØ-öø-ÿ,.@:&*+_<>()!?/\\$%\d' -]+)$
+          pattern:  ^[\u0020-\u007E\u00A1-\u00FF]+$   
           maxLength: 150
           example: Marco Antonio de Brito
           description: |
@@ -2296,50 +2296,6 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/ResponsePixPaymentData'
-        links:
-          $ref: '#/components/schemas/LinkSingle'
-        meta:
-          $ref: '#/components/schemas/Meta'
-    ResponsePatchPixConsent:
-      type: object
-      required:
-        - data
-        - links
-        - meta
-      properties:
-        data: 
-          example:
-             - paymentId: "TXpRMU9UQTROMWhZV2xSU1FUazJSMDl"
-               statusUpdateDateTime: "2020-07-21T08:30:00Z"
-             - paymentId: "TXpRMU9UQTROMWhZV2xSU1FUazJSMDx"
-               statusUpdateDateTime: "2020-07-21T08:30:00Z"
-          type: array
-          items:
-            type: object
-            description: Objeto contendo dados do pagamento.
-            required:
-              - paymentId
-              - statusUpdateDateTime
-            properties:
-              paymentId:
-                type: string
-                minLength: 1
-                maxLength: 100
-                pattern: '^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$'
-                example: TXpRMU9UQTROMWhZV2xSU1FUazJSMDl
-                description: |
-                  Código ou identificador único informado pela instituição detentora da conta para representar
-                  a iniciação de pagamento individual. O `paymentId` deve ser diferente do `endToEndId`.
-                  Este é o identificador que deverá ser utilizado na consulta ao status da iniciação de pagamento efetuada.
-              statusUpdateDateTime:
-                type: string
-                format: date-time
-                pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])T(?:[01]\d|2[0123]):(?:[012345]\d):(?:[012345]\d)Z$'
-                example: '2020-07-21T08:30:00Z'
-                description: |
-                  Data e hora da última atualização da iniciação de pagamento.
-                  Uma string com data e hora conforme especificação RFC-3339,
-                  sempre com a utilização de timezone UTC(UTC time format).
         links:
           $ref: '#/components/schemas/LinkSingle'
         meta:
