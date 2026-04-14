@@ -42,13 +42,13 @@
 
   <script>
     window.onload = function() {
-      const specList = [{"url": "./2.0.2.yaml", "name": "2.0.2"}];
+      const specList = [{"url": "./2.0.2.yaml", "name": "2.0.2"},{"url": "./2.1.0.yaml", "name": "2.1.0"}];
 
-      const primarySpec = specList.find(spec => spec.url === "./2.0.2.yaml") || specList[0];
+      const primarySpec = specList.find(spec => spec.url === "./2.1.0.yaml") || specList[0];
 
       const ui = SwaggerUIBundle({
         urls: specList,
-        "urls.primaryName": "2.0.2",
+        "urls.primaryName": "2.1.0",
         dom_id: '#swagger-ui',
         deepLinking: true,
         showExtensions: true,
