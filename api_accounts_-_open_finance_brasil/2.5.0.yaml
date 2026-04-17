@@ -937,6 +937,7 @@ components:
           $ref: '#/components/schemas/EnumTransactionTypes'
         typeAdditionalInfo:
           type: string
+          maxLength: 144
           pattern: '[\w\W\s]*'
           description: |
             Informações complementares para tipo de transação. 
