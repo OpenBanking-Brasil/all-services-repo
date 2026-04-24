@@ -63,7 +63,7 @@ info:
         &emsp;-  Estado da portabilidade diferente de AWAITING_CONTRACT_DISCHARGE (SOLICITAÇÃO_NÃO_EFETUADA). Para relembrar a instituição credora que 
           o contrato ainda está pendente de desaverbação o estado da máquina deverá ser AWAITING_CONTRACT_DISCHARGE
 
-  version: 1.0.0-beta.2
+  version: 1.0.0-RC.1
   license:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0'
@@ -2336,10 +2336,12 @@ components:
       type: string
       enum:
         -  SOLICITAÇÃO_NÃO_EFETUADA
+        - CAMPO_INCONSISTENTE
       example:  SOLICITAÇÃO_NÃO_EFETUADA
       description: |
         Códigos de erros previstos para portabilidade de crédito:
         -  SOLICITAÇÃO_NÃO_EFETUADA: A Instituição credora tem um SLA de 10 dias contados apartir da comunicação do pagamento através do endpoint [POST] /portabilities/{portabilityId}/payment para realizar desaverbar o contrato consignado de empréstimo junto ao SERPRO.
+        - CAMPO_INCONSISTENTE: CNPJ da instituição proponente não pode ser igual ao CNPJ da instituição credora.
     Meta:
       type: object
       description: Meta informações referentes à API requisitada.
