@@ -56,14 +56,14 @@ info:
     
     **- Para endpoint ([PATCH] /portabilities/{portabilityId}/cancel):**   
       &nbsp;&nbsp;**Semânticos**   
-        &emsp;- Estado da portabilidade diferente de `RECEIVED`, `PENDING` ou `ACCEPTED_SETTLEMENT_IN_PROGRESS` (`CANCELAMENTO_NAO_EFETUADO`). Obs.: De acordo com o PRD o usuário poderá cancelar o pedido de portabilidade até a etapa de liquidação, após esta etapa não será mais permitido o cancelamento da portabilidade
+        &emsp;- Estado da portabilidade diferente de `RECEIVED`, `PENDING` ou `ACCEPTED_SETTLEMENT_IN_PROGRESS` (`CANCELAMENTO_NÃO_EFETUADO`). Obs.: De acordo com o PRD o usuário poderá cancelar o pedido de portabilidade até a etapa de liquidação, após esta etapa não será mais permitido o cancelamento da portabilidade
    
     **- Para endpoint ([POST] /portabilities/{portabilityId}/request_discharge):**   
       &nbsp;&nbsp;**Semânticos**   
         &emsp;-  Estado da portabilidade diferente de AWAITING_CONTRACT_DISCHARGE (SOLICITAÇÃO_NÃO_EFETUADA). Para relembrar a instituição credora que 
           o contrato ainda está pendente de desaverbação o estado da máquina deverá ser AWAITING_CONTRACT_DISCHARGE
 
-  version: 1.0.0-RC.1
+  version: 1.0.0-beta.2
   license:
     name: Apache 2.0
     url: 'https://www.apache.org/licenses/LICENSE-2.0'
@@ -1933,27 +1933,16 @@ components:
               description: Dados do contrato de empréstimo consignado.
               type: object
               required:
-                - payrollContractNumber
+                - contractId
                 - registeringEntity
               properties:
-                payrollContractNumber:
+                contractId:
                   type: string
                   pattern: '^[a-zA-Z0-9][a-zA-Z0-9-]{0,19}$'
                   maxLength: 20
                   minLength: 1
                   description: Número do contrato dado pela instituição contratante no sistema da averbadora.
                   example: '12346579841058798Asq'
-                relatedPayrollContractNumbers:
-                  type: array
-                  description: Lista de números de contratos relacionados ao contrato principal na averbadora. Este campo deve ser utilizado quando um único contrato na instituição credora estiver associado a múltiplos códigos de averbação junto à averbadora.
-                  required: false
-                  minItems: 0
-                  items:
-                    type: string
-                    pattern: '^[a-zA-Z0-9][a-zA-Z0-9-]{0,19}$'
-                    minLength: 1
-                    maxLength: 20
-                    example: ["12346579841058798Asq","22346579841058798Asq", "42346579841058798Asq"]
                 registeringEntity:
                   type: string
                   enum:
@@ -2129,8 +2118,19 @@ components:
           minItems: 0
           description: Objeto para notificar a respeito da solicita o estorno da STR efetuada para liquidar o contrato consignado.
           required:
+            - transactionId
             - payrollData
           properties:
+              transactionId:
+                type: string
+                pattern: '^[^\s](?:.*[^\s])?$'
+                maxLength: 20
+                minLength: 1
+                example: 'STR20181108000000013'
+                description: |
+                  Identificador da transação utilizada para proponente liquidar a portabilidade de crédito com a credora.
+                  
+                  No contexto da STR0052, utilizar o valor do campo de retorno NumCtrlSTR (Numero de Controle da STR)
               payrollData:
                 description: Dados do contrato de empréstimo consignado.
                 type: object
@@ -2319,11 +2319,11 @@ components:
     EnumErrorsPatchCancel:
       type: string
       enum:
-        - CANCELAMENTO_NAO_EFETUADO
-      example: CANCELAMENTO_NAO_EFETUADO
+        - CANCELAMENTO_NÃO_EFETUADO
+      example: CANCELAMENTO_NÃO_EFETUADO
       description: |
         Códigos de erros previstos para portabilidade de crédito:
-        - CANCELAMENTO_NAO_EFETUADO: Estado da portabilidade diferente de RECEIVED, PENDING ou ACCEPTED_SETTLEMENT_IN_PROGRESS. Obs.: De acordo com o PRD o usuário poderá cancelar o pedido de portabilidade até a etapa de liquidação, após esta etapa não será mais permitido o cancelamento da portabilidade.
+        - CANCELAMENTO_NÃO_EFETUADO: Estado da portabilidade diferente de RECEIVED, PENDING ou ACCEPTED_SETTLEMENT_IN_PROGRESS. Obs.: De acordo com o PRD o usuário poderá cancelar o pedido de portabilidade até a etapa de liquidação, após esta etapa não será mais permitido o cancelamento da portabilidade.
     EnumErrorsPostPayments:
       type: string
       enum:
@@ -2336,12 +2336,10 @@ components:
       type: string
       enum:
         -  SOLICITAÇÃO_NÃO_EFETUADA
-        - CAMPO_INCONSISTENTE
       example:  SOLICITAÇÃO_NÃO_EFETUADA
       description: |
         Códigos de erros previstos para portabilidade de crédito:
         -  SOLICITAÇÃO_NÃO_EFETUADA: A Instituição credora tem um SLA de 10 dias contados apartir da comunicação do pagamento através do endpoint [POST] /portabilities/{portabilityId}/payment para realizar desaverbar o contrato consignado de empréstimo junto ao SERPRO.
-        - CAMPO_INCONSISTENTE: CNPJ da instituição proponente não pode ser igual ao CNPJ da instituição credora.
     Meta:
       type: object
       description: Meta informações referentes à API requisitada.
@@ -3009,7 +3007,7 @@ components:
               summary: Cancelamento não efetuado
               value:
                 errors:
-                  - code: CANCELAMENTO_NAO_EFETUADO
+                  - code: CANCELAMENTO_NÃO_EFETUADO
                     title: Estado da portabilidade diferente de RECEIVED, PENDING ou ACCEPTED_SETTLEMENT_IN_PROGRESS
                     detail: Estado da portabilidade diferente de RECEIVED, PENDING ou ACCEPTED_SETTLEMENT_IN_PROGRESS
                 meta:
