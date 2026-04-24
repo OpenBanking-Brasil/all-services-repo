@@ -1943,6 +1943,17 @@ components:
                   minLength: 1
                   description: Número do contrato dado pela instituição contratante no sistema da averbadora.
                   example: '12346579841058798Asq'
+                relatedPayrollContractNumbers:
+                  type: array
+                  description: Lista de números de contratos relacionados ao contrato principal na averbadora. Este campo deve ser utilizado quando um único contrato na instituição credora estiver associado a múltiplos códigos de averbação junto à averbadora.
+                  required: false
+                  minItems: 0
+                  items:
+                    type: string
+                    pattern: '^[a-zA-Z0-9][a-zA-Z0-9-]{0,19}$'
+                    minLength: 1
+                    maxLength: 20
+                    example: ["12346579841058798Asq","22346579841058798Asq", "42346579841058798Asq"]
                 registeringEntity:
                   type: string
                   enum:
