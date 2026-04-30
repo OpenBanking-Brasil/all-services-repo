@@ -735,6 +735,17 @@ components:
                   • PROPOSITO_INVALIDO: O propósito informado é incompatível com os dados presentes na transação.
         meta:
           $ref: '#/components/schemas/Meta'
+    IbgeTownCode:
+      type: string
+      minLength: 7
+      maxLength: 7
+      pattern: '^\d{7}$'
+      example: '5300108'
+      description: |
+        O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
+        Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
+        No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.   
+        [Restrição] Para QRCode Dinâmico com vencimento é obrigatório o envio desse parâmetro pelo ITP para que o Detentor possa utiliza-lo em sua consulta. É obrigatório que o Detentor utilize o valor informado pelo ITP em sua consulta ao QRCode no PSP Recebedor
     Amount:
       type: string
       minLength: 4
@@ -742,8 +753,13 @@ components:
       pattern: '^((\d{1,16}\.\d{2}))$'
       example: '100000.12'
       description: |
-       Valor da transação com 2 casas decimais. Para QR Code estático com valor pré-determinado no QR Code e para QR Code dinâmico de cobrança ou QRCode Dinâmico de Pix Saque com indicação de que o valor não pode ser alterado ("modalidadeAlteracao" igual a 0): O campo amount deve ser preenchido com o valor estabelecido no QR Code.  
-       Caso seja preenchido com valor divergente do QR Code que não permita alteração, deve ser retornado um erro HTTP Status 422 VALOR_INVALIDO.
+       Valor da transação com 2 casas decimais. Para pagamento de QRCodes, a composição do valor segue as regras abaixo, de acordo com o tipo de QRCode e o produto associado a ele:  
+        ▪ QR Code Estático: Se o QR Code contém valor, o campo amount deve ser preenchido com esse valor. Se o valor não estiver presente, o valor deve ser preenchido pelo usuário pagador, em ambiente da ITP, antes da criação do consentimento.  
+        ▪ QR Code Dinâmico de Cobrança Imediata (COB): O campo amount deve ser preenchido com o valor da cobrança (valor.original). Quando valor.modalidadeAlteracao for igual a 1, o valor pode ser alterado pelo usuário pagador, em ambiente da ITP, antes da criação do consentimento.  
+        ▪ QR Code Dinâmico de Cobrança com Vencimento (COBV): O campo amount deve ser preenchido com o valor final da cobrança, correspondente à composição: valor original, deduzidos eventuais abatimentos e descontos, acrescidos de eventuais juros e multa. O campo modalidadeAlteracao não se aplica a COBV; o valor não pode ser alterado pelo usuário pagador.  
+        ▪ QR Code Dinâmico de Pix Saque: O campo amount deve ser preenchido com o valor do saque (valor.retirada.saque.valor). Quando valor.retirada.saque.modalidadeAlteracao for igual a 1, o valor do saque pode ser alterado pelo usuário pagador, em ambiente da ITP, antes da criação do consentimento e respeitados os limites definidos pelo facilitador de serviço de saque.  
+        ▪ QR Code Dinâmico de Pix Troco: O campo amount deve ser preenchido com o valor total da transação, correspondente à soma do valor da compra (valor.original) com o valor do troco (valor.retirada.troco.valor). O valor da compra (valor.original) não pode ser alterado. Quando valor.retirada.troco.modalidadeAlteracao for igual a 1, apenas o valor do troco pode ser alterado pelo usuário pagador, em ambiente da ITP, antes da criação do consentimento e respeitados os limites definidos pelo facilitador de serviço de saque.  
+        ▪ Para todos os cenários em que o valor não pode ser alterado, o campo amount deve ser preenchido com o valor estabelecido no QR Code. Caso o campo amount seja preenchido com valor divergente do esperado, deve ser retornado o erro HTTP Status 422 com código VALOR_INVALIDO.  
     Purpose:
       description: |
         Representa qual a finalidade da transação recebida.  
@@ -952,15 +968,7 @@ components:
                 amount:
                   $ref: '#/components/schemas/Amount'
                 ibgeTownCode:
-                  type: string
-                  minLength: 7
-                  maxLength: 7
-                  pattern: '^\d{7}$'
-                  example: '5300108'
-                  description: |
-                    O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
-                    Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
-                    No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.  
+                  $ref: "#/components/schemas/IbgeTownCode"
                 details:
                   $ref: '#/components/schemas/Details'
             debtorAccount:
@@ -1821,15 +1829,7 @@ components:
         amount:
           $ref: '#/components/schemas/Amount'
         ibgeTownCode:
-          type: string
-          minLength: 7
-          maxLength: 7
-          pattern: '^\d{7}$'
-          example: '5300108'
-          description: |
-            O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
-            Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
-            No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.  
+          $ref: "#/components/schemas/IbgeTownCode"
         details:
           $ref: '#/components/schemas/Details'
     PaymentPix:
@@ -2276,15 +2276,7 @@ components:
                 amount:
                   $ref: '#/components/schemas/Amount'
                 ibgeTownCode:
-                  type: string
-                  minLength: 7
-                  maxLength: 7
-                  pattern: '^\d{7}$'
-                  example: '5300108'
-                  description: |
-                    O campo ibgetowncode, no arranjo PIX, tem o mesmo comportamento que o campo codMun descrito no manual do PIX.  
-                    Caso a informação referente ao município não seja enviada; o PSP do recebedor assumirá que não existem feriados estaduais e municipais no período em questão;  
-                    No caso de QRCode Dinâmico com vencimento, deve prevalecer o código do município do usuário pagador informado pelo prestador do serviço de iniciação.  
+                  $ref: "#/components/schemas/IbgeTownCode"
                 details:
                   $ref: '#/components/schemas/Details'
             debtorAccount:
@@ -2686,12 +2678,8 @@ components:
               pattern: '^(\d{4})-(1[0-2]|0?[1-9])-(3[01]|[12][0-9]|0?[1-9])$'
               example: '2023-08-23'
               description: |
-                Define a data alvo da liquidação do pagamento.
-                O fuso horário de Brasília deve ser utilizado para criação e racionalização sobre os dados deste campo.
-
-                [Restrição] Esse campo deverá sempre ser no mínimo D+1 corrido, ou seja, a data imediatamente posterior em 
-                relação a data do consentimento considerando o fuso horário de Brasília e deverá ser no máximo D+730 corridos a 
-                partir da data do consentimento, também considerando o fuso horário de Brasília.
+                Define a data alvo da liquidação do pagamento. O fuso horário de Brasília deve ser utilizado para criação e racionalização sobre os dados deste campo.  
+                [Restrição] Esse campo deverá sempre ser no mínimo D+1 corrido, ou seja, a data imediatamente posterior em relação à data de criação do consentimento. O prazo máximo admitido para agendamento é de dois anos, contados a partir da data de criação do consentimento, limitando-se ao dia e mês correspondentes no segundo ano subsequente (Ex.: consentimento criado em 10/07/2026 permite agendamento até 10/07/2028).
     ScheduleDaily:
       type: object
       required:
