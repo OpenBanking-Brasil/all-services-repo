@@ -649,7 +649,7 @@ components:
       items:
         type: object
         required:
-          - reservedIndentification
+          - reservedIdentification
           - availableAmount
         properties:
           reservedName:
@@ -659,7 +659,7 @@ components:
             maxLength: 248
             minLength: 5
             example: Caixinha Paras Férias
-          reservedIndentification:
+          reservedIdentification:
             type: string
             description: Identificador único da reserva
             format: uuid
