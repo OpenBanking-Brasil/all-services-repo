@@ -7,11 +7,14 @@ info:
     
     ## Validação de origin nos endpoints FIDO
 
-    Durante o cadastro do cliente (DCR/DCM), o software statement assertion possui um atributo nomeado software_origin_uris. 
-    Esse atributo armazena as origens permitidas para utilização do protocolo FIDO. 
-    Nas chamadas que possuem o argumento clientDataJSON (fido-registration e authorise), o atributo origin deve ser extraído do clientDataJSON e deve ser realizada a verificação se a origin do mesmo está contida no software_origin_uris informado no momento do DCR/DCM. 
+    Durante o cadastro do cliente (DCR/DCM), o software statement assertion possui o atributo software_origin_uris, que armazena as origens autorizadas para utilização do protocolo FIDO pela iniciadora, tanto origens próprias quanto origens de páginas top-level nas quais a iniciadora opera embarcada via iframe cross-origin.   
 
-    Caso a instituição iniciadora altere ou inclua o valor do atributo software_origin_uris, será necessária realização de um novo processo de DCM com as detentoras.
+    - Nas chamadas que possuem o argumento clientDataJSON (fido-registration e authorise), a detentora deve:  
+    &ensp; ▪ Extrair origin do clientDataJSON e verificar que está contido em software_origin_uris.   
+    &ensp; ▪ Quando o campo crossOrigin do clientDataJSON for true, extrair adicionalmente o topOrigin e verificar que também está contido em software_origin_uris.  
+    &ensp; ▪ Quando crossOrigin for false ou estiver ausente, o campo topOrigin não deve ser avaliado.  
+    &ensp; ▪ A ausência de qualquer uma das origens aplicáveis em software_origin_uris deve resultar em rejeição com código ORIGEM_FIDO_INVALIDA.  
+    - Caso a iniciadora altere ou inclua o valor do atributo software_origin_uris, será necessária a realização de um novo processo de DCM com as detentoras
 
     ## Sobre os limites do dispositivo vinculado no Pix Automático
 
