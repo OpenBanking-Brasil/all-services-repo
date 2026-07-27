@@ -2557,10 +2557,9 @@ components:
               pattern: '^((\d{1,16}\.\d{2}))$'
               example: '100000.12'
               description: |
-                Valor máximo, por transação, admitido para este vínculo de conta. Este limite não garante a autorização de iniciações de pagamento;
-                servindo como referência para a iniciadora evitar a criação de consentimentos de valores tais que, garantidamente, não serão autorizados.
-
-                [Restrição] Campo de preenchimento obrigatório pelos participantes quando o campo `status` for preenchido com os valores `AUTHORISED` ou `AWAITING_ENROLLMENT`.
+                Valor máximo, por transação, admitido para este vínculo de conta. Este limite não garante a autorização de iniciações de pagamento; servindo como referência para a iniciadora evitar a criação de consentimentos de valores tais que, garantidamente, não serão autorizados.   
+                Os limites transacionais estabelecidos pela instituição detentora da conta permanecem aplicáveis, independentemente do preenchimento deste campo.   
+                [Restrição] Campo de preenchimento obrigatório quando: houver definição de limite transacional pelo usuário durante a autorização ou edição do vínculo  
             dailyLimit:
               type: string
               minLength: 4
