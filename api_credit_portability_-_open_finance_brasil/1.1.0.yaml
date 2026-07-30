@@ -849,7 +849,12 @@ components:
                 properties:
                   isEligible:
                     type: boolean
-                    description: Sinaliza se as características do contrato é elegível para pedido de portabilidade de crédito via OFB (sem considerar a disponibilidade da portabilidade de crédito)
+                    description: |
+                      Sinaliza se as características do contrato é elegível para pedido de portabilidade de crédito via OFB (sem considerar a disponibilidade da portabilidade de crédito)
+                      
+                      Caso o contrato esteja classificado no CADOC 3040 como Domínio 02 Empréstimos  Sub Domínio 03 Crédito Pessoal Sem Consignação e não exista nenhum outro bloqueio que impeça a portabilidade (pela registradora ou OFB), deve informar `TRUE`;​
+
+                      Caso contrário deve informar `FALSE`​
                   ineligible:
                     type: object
                     required:
