@@ -35,6 +35,7 @@ info:
     ### `/contracts/{contractId}/payments`
       - permissions:
         - GET: **LOANS_PAYMENTS_READ**
+  
   version: 2.7.0
   license:
     name: Apache 2.0
