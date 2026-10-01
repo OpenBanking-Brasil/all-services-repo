@@ -49,6 +49,7 @@ info:
     **- Para endpoint ([PATCH] /portabilities/{portabilityId}/cancel):**   
       &nbsp;&nbsp;**Semânticos**   
         &emsp;- Estado da portabilidade diferente de RECEIVED, PENDING ou ACCEPTED_SETTLEMENT_IN_PROGRESS (CANCELAMENTO_NÃO_EFETUADO). Obs.: De acordo com o PRD o usuário poderá cancelar o pedido de portabilidade até a etapa de liquidação, após esta etapa não será mais permitido o cancelamento da portabilidade   
+  
   version: 1.1.0
   license:
     name: Apache 2.0
